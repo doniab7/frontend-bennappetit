@@ -13,10 +13,8 @@ import { BiChevronsRight } from "react-icons/bi";
 import { AiOutlineCheckSquare } from "react-icons/ai";
 
 const MealSingle = ({ meal }) => {
-  console.log(meal);
-
-  let instructions = meal?.steps.map((step) => step.description);
-  instructions = instructions.filter((instruction) => instruction.length > 1);
+ /* let instructions = meal.steps.map((step) => step.description);
+  instructions = instructions.filter((instruction) => instruction.length > 1);*/
 
   return (
     <div className="section-wrapper">
@@ -43,7 +41,7 @@ const MealSingle = ({ meal }) => {
         <section className="sc-details bg-white">
           <div className="details-head grid">
             <div className="details-img">
-              <img src={meal?.thumbnail} alt="" className="img-cover" />
+              <img src={meal?.thumbnail} alt={meal?.name} className="img-cover" />
             </div>
 
             <div className="details-intro">
@@ -58,7 +56,7 @@ const MealSingle = ({ meal }) => {
                     marginLeft: "10px",
                   }}
                 >
-                  theBestChefEver123
+                  theBestChefEver123 {/* Placeholder chef name */}
                 </h4>
               </div>
               <p className="title"> </p>
@@ -95,23 +93,23 @@ const MealSingle = ({ meal }) => {
             <div className="measures my-4">
               <h6 className="fs-16">Ingredients:</h6>
               <ul className="grid">
-                {meal?.ingredients?.map((ingredient) => (
-                  <li key={ingredient.id} className="fs-14 flex align-end">
+                {/* meal.ingredients.map((ingredient, index) => (
+                  <li key={index} className="fs-14 flex align-end">
                     <span className="li-icon fs-12 text-orange">
                       <FaUtensilSpoon />
                     </span>
                     <span className="li-text fs-15 fw-6 op-09">
-                      {ingredient.name}: {ingredient.measure}
+                      {ingredient.name}: {ingredient.quantity} {ingredient.type}
                     </span>
                   </li>
-                ))}
+                )) */}
               </ul>
             </div>
 
             <div className="instructions my-4">
               <h6 className="fs-16">Instructions:</h6>
-              <ul className="grid">
-                {instructions?.map((instruction, idx) => (
+              <ol className="grid">
+                {/*instructions.map((instruction, idx) => (
                   <li key={idx} className="fs-14">
                     <AiOutlineCheckSquare
                       size={18}
@@ -121,8 +119,8 @@ const MealSingle = ({ meal }) => {
                       {instruction}
                     </span>
                   </li>
-                ))}
-              </ul>
+                ))*/}
+              </ol>
             </div>
           </div>
         </section>
