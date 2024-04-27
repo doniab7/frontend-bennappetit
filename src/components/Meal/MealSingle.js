@@ -13,8 +13,8 @@ import { BiChevronsRight } from "react-icons/bi";
 import { AiOutlineCheckSquare } from "react-icons/ai";
 
 const MealSingle = ({ meal }) => {
- /* let instructions = meal.steps.map((step) => step.description);
-  instructions = instructions.filter((instruction) => instruction.length > 1);*/
+  
+  const instructions = meal?.steps?.map(step => step.description) || [];
 
   return (
     <div className="section-wrapper">
@@ -93,8 +93,8 @@ const MealSingle = ({ meal }) => {
             <div className="measures my-4">
               <h6 className="fs-16">Ingredients:</h6>
               <ul className="grid">
-                {/* meal.ingredients.map((ingredient, index) => (
-                  <li key={index} className="fs-14 flex align-end">
+                { meal?.ingredients?.map((ingredient, id) => (
+                  <li key={id} className="fs-14 flex align-end">
                     <span className="li-icon fs-12 text-orange">
                       <FaUtensilSpoon />
                     </span>
@@ -102,14 +102,14 @@ const MealSingle = ({ meal }) => {
                       {ingredient.name}: {ingredient.quantity} {ingredient.type}
                     </span>
                   </li>
-                )) */}
+                )) }
               </ul>
             </div>
 
             <div className="instructions my-4">
               <h6 className="fs-16">Instructions:</h6>
               <ol className="grid">
-                {/*instructions.map((instruction, idx) => (
+                {instructions.map((instruction, idx) => (
                   <li key={idx} className="fs-14">
                     <AiOutlineCheckSquare
                       size={18}
@@ -119,7 +119,7 @@ const MealSingle = ({ meal }) => {
                       {instruction}
                     </span>
                   </li>
-                ))*/}
+                ))}
               </ol>
             </div>
           </div>
