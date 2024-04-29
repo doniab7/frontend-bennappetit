@@ -10,11 +10,14 @@ import {
 import { AiFillHome } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { BiChevronsRight } from "react-icons/bi";
-import { AiOutlineCheckSquare } from "react-icons/ai";
+import { BASE_URL, MEAL_THUMBNAIL_URL } from "../../utils/constants";
 
 const MealSingle = ({ meal }) => {
   
   const instructions = meal?.steps?.map(step => step.description) || [];
+
+   const mealThumbnail = BASE_URL + MEAL_THUMBNAIL_URL + meal?.thumbnail;
+
 
   return (
     <div className="section-wrapper">
@@ -41,7 +44,7 @@ const MealSingle = ({ meal }) => {
         <section className="sc-details bg-white">
           <div className="details-head grid">
             <div className="details-img">
-              <img src={meal?.thumbnail} alt={meal?.name} className="img-cover" />
+              <img src={mealThumbnail} alt={meal?.name} className="img-cover" />
             </div>
 
             <div className="details-intro">
@@ -56,7 +59,7 @@ const MealSingle = ({ meal }) => {
                     marginLeft: "10px",
                   }}
                 >
-                  theBestChefEver123 {/* Placeholder chef name */}
+                  {meal?.user?.username}
                 </h4>
               </div>
               <p className="title"> </p>
@@ -111,10 +114,7 @@ const MealSingle = ({ meal }) => {
               <ol className="grid">
                 {instructions.map((instruction, idx) => (
                   <li key={idx} className="fs-14">
-                    <AiOutlineCheckSquare
-                      size={18}
-                      className="text-orange li-icon"
-                    />
+                   
                     <span className="li-text fs-16 fw-5 op-09">
                       {instruction}
                     </span>

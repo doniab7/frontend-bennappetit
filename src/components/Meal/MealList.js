@@ -1,6 +1,7 @@
 import React from 'react';
 import "./Meal.scss";
 import { Link } from 'react-router-dom';
+import { BASE_URL, MEAL_THUMBNAIL_URL } from '../../utils/constants';
 
 const MealList = ({ meals }) => {
   console.log(meals);
@@ -13,10 +14,12 @@ const MealList = ({ meals }) => {
             meals?.map(mealItem => {
               const {id,  region, category, name, thumbnail } = mealItem;
 
+              const mealThumbnail = BASE_URL + MEAL_THUMBNAIL_URL + thumbnail;
+
               return (
                 <Link to = {`/meal/${id}`} className = "meal-itm align-center justify-center" key = {id}>
                   <div className='meal-itm-img'>
-                    <img src = {thumbnail} alt = {name} />
+                    <img src = {mealThumbnail} alt = {name} />
                     <div className='meal-itm-cat bg-orange text-orange fw-6'>{category.name}</div>
                   </div>
 
