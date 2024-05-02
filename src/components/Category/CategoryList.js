@@ -1,12 +1,29 @@
-import React from 'react';
+import React, { useState } from "react";
 import { Link } from 'react-router-dom';
 import "./Category.scss";
+import AddMealForm from "../../components/Meal/AddMealForm";
 
 const CategoryList = ({categories}) => {
+  const [modalOpen, setModalOpen] = useState(false);
   return (
     <div className='section-wrapper bg-whitesmoke'>
         <div className='container'>
           <div className='sc-title'>categories</div>
+
+        <div className="common-container">
+          <div className="max-w-5xl flex-start gap-3 justify-start w-full">
+            <button 
+              type="submit" 
+              style={{ backgroundColor: '#7b1c27', color: '#fff', padding: '10px 20px', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+              onClick={() => {
+                setModalOpen(true);
+              }}
+              >Add my recipe
+            </button>
+          </div>
+        {modalOpen && <AddMealForm setOpenModal={setModalOpen} />}
+      </div>
+
           <section className='sc-category grid'>
             {
               categories.map(category => {
