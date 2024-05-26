@@ -3,6 +3,7 @@ import { Category, Error, Home, MealDetails } from "./pages";
 import LoginSignUp from "./components/LoginSignup/LoginSignup";
 import Sidebar from "./components/Sidebar/Sidebar";
 import Header from "./components/Header/Header";
+import UserMeal from "./components/Meal/UserMeal";
 import { useAuthContext } from "./context/authenticationContext";
 import UserProfile from "./components/Profile/UserProfile";
 import Navbar from "./components/Header/Navbar";
@@ -45,14 +46,21 @@ const Routing = () => {
           </Layout>
         }
       />
-      <Route path="/signup" element={<LoginSignUp />} />
+      <Route 
+      path="/signup" 
+      element={<LoginSignUp />} 
+      />
+
+      <Route path="/your-recipes" 
+      element={<UserMeal />} 
+      />
 
       <Route
         path="/user/:id"
         element={
-          <PrivateRoute>
+          // <PrivateRoute>
             <UserProfile />
-          </PrivateRoute>
+          // </PrivateRoute>
         }
       />
 
