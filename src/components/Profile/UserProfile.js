@@ -3,6 +3,11 @@ import styles from "./UserProfile.module.scss";
 import { useAuthContext } from "../../context/authenticationContext";
 import { Link } from "react-router-dom";
 import { MdFoodBank } from "react-icons/md";
+import { Route, Routes } from "react-router-dom";
+import UserMeal from "../Meal/UserMeal";
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import "react-tabs/style/react-tabs.css";
+import FollowersModal from "./FollowersModal";
 
 const UserProfile = () => {
   return (
@@ -82,21 +87,32 @@ const ProfileCard = () => {
 
 const SettingsTabs = () => {
   return (
-    <div className={styles["settings-tabs"]}>
-      <ul className={styles.tabs}>
-        <li>Account Settings</li>
-        <li>Your Followers</li>
-        <li>Following</li>
-        <li>Your Recipes</li>
+    <div>
+      <Tabs>
+        <TabList>
+          <Tab>Account Settings</Tab>
+          <Tab>Your Followers</Tab>
+          <Tab>Following</Tab>
+          <Tab>Your Recipes</Tab>
+          <Tab>Notifications</Tab>
+        </TabList>
 
-        <li>Notifications</li>
-      </ul>
-      <div className={styles["tab-content"]}>
-        <label>
-          Receive notification emails
-          <input type="checkbox" />
-        </label>
-      </div>
+        <TabPanel>
+          <label>
+            Receive notification emails
+            <input type="checkbox" />
+          </label>
+        </TabPanel>
+        <TabPanel>
+          <FollowersModal type="followers" />
+        </TabPanel>
+        <TabPanel>
+          <FollowersModal type="following" />
+        </TabPanel>
+        <TabPanel>
+          <UserMeal />
+        </TabPanel>
+      </Tabs>
     </div>
   );
 };

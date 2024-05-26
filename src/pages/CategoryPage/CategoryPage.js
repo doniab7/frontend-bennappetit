@@ -9,7 +9,6 @@ const CategoryPage = () => {
   const {name} = useParams();
   const { categoryMeals, dispatch } = useMealContext();
 
-
   useEffect(() => {
     startFetchMealByCategory(dispatch, name);
   }, [name, dispatch]);
