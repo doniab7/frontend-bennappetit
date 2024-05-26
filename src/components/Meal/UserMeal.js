@@ -5,7 +5,7 @@ import axios from 'axios';
 import AddMealForm from './AddMealForm';
 import { useMealContext} from '../../context/mealContext';
 import { startFetchSingleUserMeals } from '../../actions/mealsActions';
-
+import { useParams } from 'react-router-dom';
 
 const UserMeal = () => {
     const {id} = useParams();
