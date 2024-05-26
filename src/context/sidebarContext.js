@@ -21,6 +21,7 @@ export const SidebarProvider = ({children}) => {
     const closeSidebar = () => {
         dispatch({ type: CLOSE_SIDEBAR });
     }
+  
 
     return (
         <SidebarContext.Provider value = {{

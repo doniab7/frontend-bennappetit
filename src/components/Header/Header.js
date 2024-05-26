@@ -2,8 +2,10 @@ import React from 'react';
 import "./Header.scss";
 import Navbar from "./Navbar";
 import SearchForm from "./SearchForm";
+import { useAuthContext } from '../../context/authenticationContext';
 
 const Header = () => {
+
   return (
     <header className='header'>
       <Navbar />
