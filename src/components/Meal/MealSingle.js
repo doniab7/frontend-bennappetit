@@ -11,13 +11,18 @@ import { AiFillHome } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { BiChevronsRight } from "react-icons/bi";
 import { BASE_URL, MEAL_THUMBNAIL_URL } from "../../utils/constants";
+import { FaUserPlus, FaBell } from "react-icons/fa";
+import { useState } from "react";
 
 const MealSingle = ({ meal }) => {
-  
-  const instructions = meal?.steps?.map(step => step.description) || [];
+  const instructions = meal?.steps?.map((step) => step.description) || [];
 
-   const mealThumbnail = BASE_URL + MEAL_THUMBNAIL_URL + meal?.thumbnail;
+  const mealThumbnail = BASE_URL + MEAL_THUMBNAIL_URL + meal?.thumbnail;
 
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(false);
 
   return (
     <div className="section-wrapper">
@@ -54,13 +59,34 @@ const MealSingle = ({ meal }) => {
                 <h4
                   className="text-orange"
                   style={{
-                    fontSize: "1em",
+                    fontSize: "1.2em",
                     fontWeight: "normal",
                     marginLeft: "10px",
+                    marginRight: "10px",
                   }}
                 >
                   {meal?.user?.username}
                 </h4>
+                <button
+                  className={`btn btn-content btn-small ${
+                    isFollowing ? "btn-white" : "btn-red"
+                  }`}
+                  style={{ marginRight: "10px" }}
+                  onClick={() => setIsFollowing(!isFollowing)}
+                >
+                  <FaUserPlus className="icon" />{" "}
+                  {isFollowing ? "Following" : "Follow"}
+                </button>
+                <button
+                  className={`btn btn-content btn-small ${
+                    notificationsEnabled ? "btn-white" : "btn-red"
+                  }`}
+                  style={{ marginRight: "10px" }}
+                  onClick={() => setNotificationsEnabled(!notificationsEnabled)}
+                >
+                  <FaBell className="icon" />{" "}
+                  {notificationsEnabled ? "Notifications On" : "Notifications"}
+                </button>
               </div>
               <p className="title"> </p>
               <div className="py-4">
@@ -75,11 +101,24 @@ const MealSingle = ({ meal }) => {
               </div>
 
               <div className="button-group flex-container">
-                <button className="btn btn-red btn-content">
-                  <FaHeart className="icon" /> Like
+                <button
+                  className={`btn btn-content ${
+                    isLiked ? "btn-white" : "btn-red"
+                  }`}
+                  style={{ marginRight: "10px" }}
+                  onClick={() => setIsLiked(!isLiked)}
+                >
+                  <FaHeart className="icon" /> {isLiked ? "Liked" : "Like"}
                 </button>
-                <button className="btn btn-red btn-content">
-                  <FaBookmark className="icon" /> Bookmark
+                <button
+                  className={`btn btn-content ${
+                    isBookmarked ? "btn-white" : "btn-red"
+                  }`}
+                  style={{ marginRight: "10px" }}
+                  onClick={() => setIsBookmarked(!isBookmarked)}
+                >
+                  <FaBookmark className="icon" />{" "}
+                  {isBookmarked ? "Bookmarked" : "Bookmark"}
                 </button>
                 <button className="btn btn-red btn-content">
                   <FaShareSquare className="icon" /> Share
@@ -96,7 +135,7 @@ const MealSingle = ({ meal }) => {
             <div className="measures my-4">
               <h6 className="fs-16">Ingredients:</h6>
               <ul className="grid">
-                { meal?.ingredients?.map((ingredient, id) => (
+                {meal?.ingredients?.map((ingredient, id) => (
                   <li key={id} className="fs-14 flex align-end">
                     <span className="li-icon fs-12 text-orange">
                       <FaUtensilSpoon />
@@ -105,7 +144,7 @@ const MealSingle = ({ meal }) => {
                       {ingredient.name}: {ingredient.quantity} {ingredient.type}
                     </span>
                   </li>
-                )) }
+                ))}
               </ul>
             </div>
 
@@ -114,7 +153,6 @@ const MealSingle = ({ meal }) => {
               <ol className="grid">
                 {instructions.map((instruction, idx) => (
                   <li key={idx} className="fs-14">
-                   
                     <span className="li-text fs-16 fw-5 op-09">
                       {instruction}
                     </span>
