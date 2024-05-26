@@ -73,4 +73,20 @@
             background: $clr-white;
         }
     }
+
+}
+.navbar-show-btn {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem; // rounded corners
+  transition: $transition;
+  &:hover {
+    background-color: darken($clr-dark-orange, 10%);
+  }
+
+  .mr-1 { // margin right for the icon inside the button
+    margin-right: 8px;
+  }
 }

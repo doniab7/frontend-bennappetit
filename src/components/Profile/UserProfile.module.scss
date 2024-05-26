@@ -1,0 +1,144 @@
+.main-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center; // This centers the child div
+  position: relative; // Ensures that this content is layered above the SVG
+  z-index: 100;
+
+  .profile-settings-container {
+    background-color: rgba(255, 255, 255, 0.579);
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    max-width: 1200px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 3rem;
+    gap: 2rem;
+    margin-top: -275px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    height: 600px;
+      
+  }
+
+  .profile-card-container {
+    width: 100%; // Take up the full width
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    margin-top: 300px; // To overlap the header
+    background: #fff; // Set the background to white
+    border-radius: 5px;
+    z-index: 100; // Ensure it's above the page background but below the fixed header
+  }
+
+  .profile-card {
+    background-color: white;
+    padding: 20px;
+    margin-right: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+
+    .profile-picture {
+      border-radius: 50%;
+      border: 3px solid #dedede;
+      width: 120px;
+      height: 120px;
+      margin-bottom: 20px;
+    }
+
+  
+
+    .stats {
+      list-style: none;
+      padding: 0;
+      width: 100%;
+      text-align: left;
+
+      li {
+        margin: 10px 0;
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+
+    .view-profile-button,
+    .update-button {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px 0;
+      background-color: #c5541a;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .profile-link {
+      width: 100%;
+      margin-top: 10px;
+      display: flex;
+
+      input {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+      }
+    }
+  }
+
+  .settings-container {
+    flex: 1;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+
+    .settings-tabs {
+      ul {
+        list-style: none;
+        display: flex;
+        padding: 0;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #dee2e6;
+
+        li {
+          padding: 10px 20px;
+          cursor: pointer;
+          margin-right: 10px;
+          border-radius: 5px;
+          user-select: none;
+            
+          &:hover {
+            background-color: #f8f9fa;
+          }
+        }
+      }
+
+      .tab-content {
+        padding: 20px;
+      }
+    }
+  }
+}
+
+.custom-shape-divider-top-1714330091 {
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+
+  svg {
+    display: block;
+    width: calc(100% + 1.3px);
+    height: 359px;
+  }
+
+  .shape-fill {
+    fill: #c5531a7a;
+  }
+}
