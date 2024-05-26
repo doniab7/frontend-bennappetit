@@ -4,12 +4,19 @@ const AuthContext = createContext({});
 
 export function AuthProvider({ children }) {
   const [authUser, setAuthUser] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(null);
   useEffect(() => {
     async function fetchUser() {
       try {
-        const content = await fetch("http://localhost:8000/user", {
-          headers: { "Content-Type": "application/json" },
+        if (!localStorage.getItem("token")) {
+          throw new Error("not found user");
+        }
+
+        const content = await fetch("http://localhost:3000/user/connected", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
           credentials: "include",
         });
 

@@ -17,7 +17,7 @@ const LoginSignUp = () => {
     try {
       let response;
       if (action === "Sign Up") {
-        response = await fetch("http://localhost:8000/user/register", {
+        response = await fetch("http://localhost:3000/user/register", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
@@ -28,23 +28,31 @@ const LoginSignUp = () => {
           }),
         });
       } else if (action === "Login") {
-        response = await fetch("http://localhost:8000/user/login", {
+        response = await fetch("http://localhost:3000/user/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
           body: JSON.stringify({
-            username,
+            email,
             password,
           }),
         });
       }
 
       if (response && response.ok) {
-        const content = await fetch("http://localhost:8000/user", {
-          headers: { "Content-Type": "application/json" },
+        const responseData = await response.json(); // Parse the JSON data
+        localStorage.setItem("token", responseData.access_token);
+        const content = await fetch("http://localhost:3000/user/connected", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
           credentials: "include",
         });
-        setAuthUser(await content.json());
+        const user = await content.json();
+        setAuthUser(user);
+        localStorage.setItem("user", user);
+
         setIsLoggedIn(true);
       } else {
         console.error("Failed to fetch user:", response.statusText);
@@ -73,26 +81,27 @@ const LoginSignUp = () => {
               : " We hope you've brought your appetite"}
           </p>
           <form className={styles.form} onSubmit={submit}>
-            <div className={styles.inputGroup}>
-              <FaUser className={styles.icon} />
-              <input
-                type="text"
-                placeholder="Username"
-                onChange={(e) => setUsername(e.target.value)}
-                required
-              />
-            </div>
             {action === "Sign Up" && (
               <div className={styles.inputGroup}>
-                <MdEmail className={styles.icon} />
+                <FaUser className={styles.icon} />
                 <input
-                  type="email"
-                  placeholder="Email"
-                  onChange={(e) => setEmail(e.target.value)}
+                  type="text"
+                  placeholder="Username"
+                  onChange={(e) => setUsername(e.target.value)}
                   required
                 />
               </div>
             )}
+            <div className={styles.inputGroup}>
+              <MdEmail className={styles.icon} />
+              <input
+                type="email"
+                placeholder="Email"
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+
             <div className={styles.inputGroup}>
               <FaKey className={styles.icon} />
               <input
