@@ -3,25 +3,21 @@ import React, { useEffect, useState } from 'react';
 import MealList from './MealList';
 import axios from 'axios';
 import AddMealForm from './AddMealForm';
+import { useMealContext} from '../../context/mealContext';
+import { startFetchSingleUserMeals } from '../../actions/mealsActions';
 
 
 const UserMeal = () => {
-  const [meals, setMeals] = useState([]);
+    const {id} = useParams();
+    const { Meals, dispatch } = useMealContext();
+    useEffect(() => {
+        startFetchSingleUserMeals(dispatch, id);
+    }, [id, dispatch]);
+
   const [modalOpen, setModalOpen] = useState(false);
 
-  useEffect(() => {
-    const fetchUserMeals = async () => {
-      try {
-        const response = await axios.get('/api/user/meals'); 
-        setMeals(response.data);
-      } catch (error) {
-        console.error('Error fetching user meals:', error);
-      }
-    };
-    fetchUserMeals();
-  }, []);
-
   return (
+    
     <div>
       <h1>Your Recipes</h1>
       <div className="common-container">
@@ -37,7 +33,7 @@ const UserMeal = () => {
           </div>
         {modalOpen && <AddMealForm setOpenModal={setModalOpen} />}
       </div>
-      <MealList meals={meals} />
+      <MealList meals={Meals} />
     </div>
   );
 };

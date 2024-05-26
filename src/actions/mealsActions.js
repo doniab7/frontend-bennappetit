@@ -12,6 +12,9 @@ import {
   FETCH_SINGLE_MEAL_BEGIN,
   FETCH_SINGLE_MEAL_ERROR,
   FETCH_SINGLE_MEAL_SUCCESS,
+  FETCH_SINGLE_USER_MEALS_BEGIN,
+  FETCH_SINGLE_USER_MEALS_ERROR,
+  FETCH_SINGLE_USER_MEALS_SUCCESS
 } from "./actions";
 
 import {
@@ -20,6 +23,7 @@ import {
   MEAL_SINGLE_URL,
   SEARCH_URL,
   MEALS_URL,
+  MEALS_USER_URL,
 } from "../utils/constants";
 
 // Fetch all categories
@@ -80,5 +84,16 @@ export const startFetchMeals = async (dispatch) => {
     dispatch({ type: FETCH_MEALS_SUCCESS, payload: response.data });
   } catch (error) {
     dispatch({ type: FETCH_MEALS_ERROR, payload: error.message });
+  }
+};
+
+// Fetch meals for a specific user
+export const startFetchSingleUserMeals = async (dispatch,id) => {
+  try {
+    dispatch({ type: FETCH_SINGLE_USER_MEALS_BEGIN });
+    const response = await axios.get(`${MEALS_USER_URL}/${id}`);
+    dispatch({ type: FETCH_SINGLE_USER_MEALS_SUCCESS, payload: response.data });
+  } catch (error) {
+    dispatch({ type: FETCH_SINGLE_USER_MEALS_ERROR, payload: error.message });
   }
 };
