@@ -7,6 +7,7 @@ import AddMealForm from './AddMealForm';
 
 const UserMeal = () => {
   const [meals, setMeals] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchUserMeals = async () => {
