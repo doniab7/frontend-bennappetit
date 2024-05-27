@@ -4,14 +4,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import './Meal.scss'; // Assurez-vous que le chemin est correct
 import api from '../../api/axios';
-import { useAuthContext } from '../../context/authenticationContext'; 
+import { useAuthContext } from '../../context/authenticationContext';
 
 const AddMealForm = ({ setOpenModal }) => {
-  const {authUser } = useAuthContext();
+  const { authUser } = useAuthContext();
   const history = useNavigate();
 
   const [name, setName] = useState('');
-  const [region, setRegion] = useState(''); 
+  const [region, setRegion] = useState('');
   const [description, setDescription] = useState('');
   const [hours, setHours] = useState('');
   const [minutes, setMinutes] = useState('');
@@ -19,7 +19,14 @@ const AddMealForm = ({ setOpenModal }) => {
   const [newIngredient, setNewIngredient] = useState('');
   const [newGrammageValue, setNewGrammageValue] = useState('');
   const [newGrammageUnit, setNewGrammageUnit] = useState('g');
+  const [ingredients, setIngredients] = useState([]); // Nouvel état pour les ingrédients
   const [thumbnail, setThumbnail] = useState(null);
+  const [category, setCategory] = useState('Beef'); // État pour la catégorie
+
+  const categories = [
+    'Beef', 'Chicken', 'Seafood', 'Vegetarian', 'Dessert',
+    'Salad', 'Pasta', 'Soup', 'Appetizer'
+  ];
 
   const handleFileInputChange = (e) => {
     const file = e.target.files[0];
@@ -32,6 +39,7 @@ const AddMealForm = ({ setOpenModal }) => {
         name: newIngredient,
         grammage: `${newGrammageValue} ${newGrammageUnit}`,
       };
+      setIngredients([...ingredients, ingredient]); // Ajouter l'ingrédient à la liste
       setNewIngredient('');
       setNewGrammageValue('');
       setNewGrammageUnit('g');
@@ -48,7 +56,7 @@ const AddMealForm = ({ setOpenModal }) => {
   };
 
   const handleStepChange = (index, field, value) => {
-    const newSteps = steps.map((step, i) => 
+    const newSteps = steps.map((step, i) =>
       i === index ? { ...step, [field]: value } : step
     );
     setSteps(newSteps);
@@ -57,28 +65,27 @@ const AddMealForm = ({ setOpenModal }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const duration = parseInt(hours) * 60 + parseInt(minutes);
-  
+
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("region", region);
+    formData.append("description", description);
+    formData.append("duration", duration);
+    formData.append("steps", JSON.stringify(steps));
+    formData.append("ingredients", JSON.stringify(ingredients)); // Ajouter les ingrédients
+    formData.append("category", category); // Ajouter la catégorie
+    if (thumbnail) {
+      formData.append("thumbnail", thumbnail);
+    }
+
     try {
-      const response = await fetch("http://localhost:3000/meal", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            name,
-            region,
-            description,
-            duration,
-            steps,
-            thumbnail,
-          }),
-        })
-      ;
-      
-      console.log("heloo", response);
-  
+      const response = await api.post('/meal', formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
       if (response.status === 200) {
         setName('');
         setRegion('');
@@ -86,6 +93,7 @@ const AddMealForm = ({ setOpenModal }) => {
         setHours('');
         setMinutes('');
         setSteps([{ rank: 1, description: '' }]);
+        setIngredients([]); // Réinitialiser la liste des ingrédients
         setThumbnail(null);
         history.push('/');
       }
@@ -93,7 +101,7 @@ const AddMealForm = ({ setOpenModal }) => {
       console.log(`Error: ${err.message}`);
     }
   };
-  
+
   return (
     <div className="modalBackground">
       <div className="modalContent">
@@ -113,8 +121,8 @@ const AddMealForm = ({ setOpenModal }) => {
               <input
                 type="text"
                 name="name"
-                onChange={(e) => setName(e.target.value)} 
-                value={name} 
+                onChange={(e) => setName(e.target.value)}
+                value={name}
                 style={{
                   width: '100%',
                   padding: '8px',
@@ -129,8 +137,8 @@ const AddMealForm = ({ setOpenModal }) => {
               <input
                 type="text"
                 name="region"
-                onChange={(e) => setRegion(e.target.value)} 
-                value={region} 
+                onChange={(e) => setRegion(e.target.value)}
+                value={region}
                 style={{
                   width: '100%',
                   padding: '8px',
@@ -140,6 +148,27 @@ const AddMealForm = ({ setOpenModal }) => {
                 required
               />
             </div>
+          </div>
+          <div style={{ marginBottom: '15px' }}>
+            <label style={{ color: '#7b1c27', fontWeight: 'bold' }}>Category:</label>
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '8px',
+                border: '1px solid #ccc',
+                borderRadius: '4px',
+                marginBottom: '10px',
+              }}
+              required
+            >
+              {categories.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
           </div>
           <div style={{ marginBottom: '15px' }}>
             <label style={{ color: '#7b1c27', fontWeight: 'bold' }}>Ingredients:</label>
@@ -202,6 +231,13 @@ const AddMealForm = ({ setOpenModal }) => {
                 Add ingredient
               </button>
             </div>
+            <ul style={{ listStyleType: 'none', padding: 0 }}>
+              {ingredients.map((ingredient, index) => (
+                <li key={index} style={{ marginBottom: '5px' }}>
+                  {ingredient.name} - {ingredient.grammage}
+                </li>
+              ))}
+            </ul>
           </div>
           <div style={{ marginBottom: '15px' }}>
             <label style={{ color: '#7b1c27', fontWeight: 'bold' }}>Steps:</label>
@@ -301,8 +337,8 @@ const AddMealForm = ({ setOpenModal }) => {
               <label style={{ color: '#7b1c27', fontWeight: 'bold' }}>Description:</label>
               <textarea
                 name="description"
-                onChange={(e) => setDescription(e.target.value)} 
-                value={description} 
+                onChange={(e) => setDescription(e.target.value)}
+                value={description}
                 style={{
                   width: '100%',
                   height: '9rem',
