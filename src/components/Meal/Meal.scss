@@ -223,9 +223,9 @@
 }
 
 .btn-content.btn-small {
-    padding: 5px 10px;
-    font-size: 12px;
-  }
+  padding: 5px 10px;
+  font-size: 12px;
+}
 
 .btn-white {
   background-color: white;
@@ -239,4 +239,66 @@
   &:last-child {
     margin-right: 0;
   }
+}
+
+.comment-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.comment-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.comment-input {
+  flex-grow: 1;
+  margin-right: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  margin-left: 10px;
+}
+
+.comment-submit {
+  padding: 10px 20px;
+  margin-top: 10px;
+  background-color: #7b1c27;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.comments {
+  width: 100%;
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+}
+
+.comments h6 {
+  margin-bottom: 10px;
+}
+
+.comments ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.comments li {
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.comments li strong {
+  margin-right: 5px;
 }
