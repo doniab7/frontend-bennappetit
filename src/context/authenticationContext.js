@@ -5,7 +5,9 @@ const AuthContext = createContext({});
 export function AuthProvider({ children }) {
   const [authUser, setAuthUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(null);
+  
   useEffect(() => {
+    
     async function fetchUser() {
       try {
         if (!localStorage.getItem("token")) {
@@ -36,7 +38,8 @@ export function AuthProvider({ children }) {
 
     fetchUser();
   }, []);
-
+ 
+ 
   const value = {
     authUser,
     setAuthUser,
