@@ -30,9 +30,8 @@ const UserMeal = () => {
 
   return (
     <div>
-      <div className="sc-title">Your Recipes</div>
       <div className="common-container">
-        <div className="max-w-5xl flex-start gap-3 justify-start w-full">
+        <div className="max-w-5xl flex-start gap-1 justify-start w-full "style={{ marginTop: "30px" }}>
           <button
             type="submit"
             style={{

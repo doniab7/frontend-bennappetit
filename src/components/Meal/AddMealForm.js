@@ -4,8 +4,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import './Meal.scss'; // Assurez-vous que le chemin est correct
 import api from '../../api/axios';
+import { useAuthContext } from '../../context/authenticationContext'; 
 
 const AddMealForm = ({ setOpenModal }) => {
+  const {authUser } = useAuthContext();
   const history = useNavigate();
 
   const [name, setName] = useState('');
@@ -17,9 +19,11 @@ const AddMealForm = ({ setOpenModal }) => {
   const [newIngredient, setNewIngredient] = useState('');
   const [newGrammageValue, setNewGrammageValue] = useState('');
   const [newGrammageUnit, setNewGrammageUnit] = useState('g');
+  const [thumbnail, setThumbnail] = useState(null);
 
   const handleFileInputChange = (e) => {
     const file = e.target.files[0];
+    setThumbnail(file);
   };
 
   const handleAddIngredient = () => {
@@ -52,24 +56,28 @@ const AddMealForm = ({ setOpenModal }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const totalDuration = parseInt(hours) * 60 + parseInt(minutes);
-  
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("region", region);
-    formData.append("description", description);
-    formData.append("duration", totalDuration);
-    formData.append("steps", JSON.stringify(steps)); 
+    const duration = parseInt(hours) * 60 + parseInt(minutes);
   
     try {
-      const response = await api.post('/meal', formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-
-      console.log(response);
+      const response = await fetch("http://localhost:3000/meal", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            name,
+            region,
+            description,
+            duration,
+            steps,
+            thumbnail,
+          }),
+        })
+      ;
+      
+      console.log("heloo", response);
   
       if (response.status === 200) {
         setName('');
@@ -78,6 +86,7 @@ const AddMealForm = ({ setOpenModal }) => {
         setHours('');
         setMinutes('');
         setSteps([{ rank: 1, description: '' }]);
+        setThumbnail(null);
         history.push('/');
       }
     } catch (err) {
