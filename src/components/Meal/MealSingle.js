@@ -26,10 +26,17 @@ const MealSingle = ({ meal }) => {
 
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
+  const [mealLikes, setMealLikes] = useState(0);
 
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [isBookmarkLoading, setIsBookmarkLoading] = useState(true);
   const [isLikeLoading, setIsLikeLoading] = useState(true);
+
+  useEffect(() => {
+    if (meal) {
+      setMealLikes(meal.numberLikes);
+    }
+  }, [meal]);
 
   useEffect(() => {
     const checkIfBookmarked = async () => {
@@ -180,6 +187,8 @@ const MealSingle = ({ meal }) => {
       );
 
       if (response.ok) {
+        const data = await response.json();
+        setMealLikes(data.numberLikes);
         setIsLiked(true);
       } else {
         console.error("Failed to like meal:", response.statusText);
@@ -206,6 +215,8 @@ const MealSingle = ({ meal }) => {
       );
 
       if (response.ok) {
+        const data = await response.json();
+        setMealLikes(data.numberLikes);
         setIsLiked(false);
       } else {
         console.error("Failed to unlike meal:", response.statusText);
@@ -328,7 +339,7 @@ const MealSingle = ({ meal }) => {
                   style={{ marginRight: "10px" }}
                   onClick={isLiked ? unlikeMeal : likeMeal}
                 >
-                  <FaHeart className="icon" /> {isLiked ? meal?.numberLikes : "Like"}
+                  <FaHeart className="icon" /> {isLiked ? mealLikes : "Like"}
                 </button>
                 <button
                   className={`btn btn-content ${
