@@ -8,6 +8,8 @@ import UserMeal from "../Meal/UserMeal";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import FollowersModal from "./FollowersModal";
+import ProfileSettings from "./ProfileSettings";
+import { BASE_URL, USER_THUMBNAIL_URL } from "../../utils/constants";
 
 const UserProfile = () => {
   return (
@@ -52,15 +54,17 @@ const SettingsContainer = () => {
     </div>
   );
 };
-
 const ProfileCard = () => {
   const { isLoggedIn, setIsLoggedIn, authUser, setAuthUser } = useAuthContext();
+  const ProfileImage = BASE_URL + USER_THUMBNAIL_URL + authUser?.ImageProfile;
+  console.log(ProfileImage)
 
   return (
     <div className={styles["profile-card"]}>
+      {console.log(authUser.ImageProfile)}
       <img
         className={styles["profile-picture"]}
-        src={require("../../assets/images/aziz.jpg")}
+        src={ProfileImage}
         alt="ee"
       />
       <h1>{isLoggedIn ? authUser.username : ""}</h1>
@@ -80,7 +84,6 @@ const ProfileCard = () => {
       <div className={styles["profile-link"]}>
         <input type="text" value="https://apple.com/co" readOnly />
       </div>
-      <button className={styles["update-button"]}>Update Image</button>
     </div>
   );
 };
@@ -98,16 +101,16 @@ const SettingsTabs = () => {
         </TabList>
 
         <TabPanel>
-          <label>
-            Receive notification emails
-            <input type="checkbox" />
-          </label>
+          <ProfileSettings />
         </TabPanel>
         <TabPanel>
           <FollowersModal type="followers" />
         </TabPanel>
         <TabPanel>
           <FollowersModal type="following" />
+        </TabPanel>
+        <TabPanel>
+          <UserMeal />
         </TabPanel>
         <TabPanel>
           <UserMeal />

@@ -1,0 +1,59 @@
+@import "../../App.scss";
+
+.profileSettingsContainer {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: none; // Remove the shadow/border
+  width: 100%;
+  max-width: 600px; // Increase the max-width if needed
+  margin: 0 auto;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.form-group-half {
+  flex: 1;
+}
+
+label {
+  color: #7b1c27;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.buttonSetting {
+  background-color: #7b1c27;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: block;
+  width: 100%;
+}
+
+h2 {
+  color: #7b1c27;
+  text-align: center;
+  padding-bottom: 20px;
+}
