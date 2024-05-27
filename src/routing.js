@@ -8,6 +8,7 @@ import { useAuthContext } from "./context/authenticationContext";
 import UserProfile from "./components/Profile/UserProfile";
 import Navbar from "./components/Header/Navbar";
 import PrivateRoute from "./PrivateRoute";
+import Unauthorized from "./components/Unauthorized/Unauthorized";
 
 const Layout = ({ children }) => (
   <>
@@ -46,21 +47,21 @@ const Routing = () => {
           </Layout>
         }
       />
-      <Route 
-      path="/signup" 
-      element={<LoginSignUp />} 
-      />
-
-      <Route path="/your-recipes" 
-      element={<UserMeal />} 
-      />
-
+      <Route path="/signup" element={<LoginSignUp />} />
+      <Route path="/your-recipes" element={<UserMeal />} />
       <Route
         path="/user/:id"
         element={
           <PrivateRoute>
             <UserProfile />
-         </PrivateRoute>
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/unauthorized"
+        element={
+            <Unauthorized />
+          
         }
       />
 

@@ -5,7 +5,9 @@ const AuthContext = createContext({});
 export function AuthProvider({ children }) {
   const [authUser, setAuthUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(null);
+  
   useEffect(() => {
+    
     async function fetchUser() {
       try {
         if (!localStorage.getItem("token")) {
@@ -23,6 +25,8 @@ export function AuthProvider({ children }) {
         if (content.ok) {
           const userData = await content.json();
           setAuthUser(userData);
+          localStorage.setItem("user", JSON.stringify(userData));
+
           setIsLoggedIn(true);
         } else {
           console.error("Failed to fetch user:", content.statusText);
@@ -36,7 +40,8 @@ export function AuthProvider({ children }) {
 
     fetchUser();
   }, []);
-
+ 
+ 
   const value = {
     authUser,
     setAuthUser,

@@ -33,8 +33,38 @@
     border-radius: 5px;
     z-index: 100; // Ensure it's above the page background but below the fixed header
   }
+  .back {
+    position: absolute;
+    top: 270px;
+    right: 300px;
+    cursor: pointer; // Change cursor to pointer for better UX
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px; // Add a gap between the icon and the text
+    transition: transform 0.3s ease; // Smooth transition for scaling
+
+    .back-text {
+      font-size: 2rem; // Adjust font size as needed
+      color: #2b0606;
+      font-weight: bold; // Make the text bold for more appeal
+      transition: transform 0.4s ease; // Smooth transition for scaling
+    }
+
+    &:hover {
+      transform: scale(1.05); // Scale up on hover
+    }
+
+    &:hover .back-text {
+      transform: scale(1.1); // Slightly larger scale on hover for text
+      color: #ff6f61; // Change text color on hover for better effect
+    }
+  }
 
   .profile-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     background-color: white;
     padding: 20px;
     margin-right: 20px;
@@ -136,7 +166,7 @@
   }
 
   .shape-fill {
-    fill: #c5531a7a;
+    fill: #7b291cd3;
   }
 }
 .card {
