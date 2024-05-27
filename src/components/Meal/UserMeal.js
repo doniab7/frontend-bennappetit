@@ -19,7 +19,7 @@ const UserMeal = () => {
   return (
     
     <div>
-      <h1>Your Recipes</h1>
+      <div className='sc-title'>Your Recipes</div>
       <div className="common-container">
           <div className="max-w-5xl flex-start gap-3 justify-start w-full">
             <button 

@@ -50,7 +50,7 @@ const Navbar = () => {
                 <button
                   type="button"
                   className="navbar-show-btn text-white navbar-brand-text fw-5 "
-                  onClick={() => navigate("/user/:id")}
+                  onClick={() => navigate(`/user/${authUser.id}`)}
                 >
                   {authUser.username}
                 </button>
