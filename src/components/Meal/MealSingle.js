@@ -8,11 +8,12 @@ import {
   FaShareSquare,
 } from "react-icons/fa";
 import { AiFillHome } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BiChevronsRight } from "react-icons/bi";
 import { BASE_URL, MEAL_THUMBNAIL_URL } from "../../utils/constants";
 import { FaUserPlus, FaBell } from "react-icons/fa";
 import { useState, useEffect } from "react";
+import { useAuthContext } from "../../context/authenticationContext";
 
 const MealSingle = ({ meal }) => {
   const instructions = meal?.steps?.map((step) => step.description) || [];
@@ -27,6 +28,9 @@ const MealSingle = ({ meal }) => {
 
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
+
+  const navigate = useNavigate();
+  const { authUser, isLoggedIn } = useAuthContext();
 
   useEffect(() => {
     const fetchBookmarks = async () => {
@@ -56,6 +60,21 @@ const MealSingle = ({ meal }) => {
     };
 
     fetchBookmarks();
+  }, [meal]);
+
+  useEffect(() => {
+    const fetchComments = async () => {
+      const response = await fetch(`http://localhost:3000/comment/${meal?.id}`);
+
+      if (response.ok) {
+        const comments = await response.json();
+        setComments(comments);
+      } else {
+        console.error("Failed to fetch comments:", response.statusText);
+      }
+    };
+
+    fetchComments();
   }, [meal]);
 
   const bookmarkMeal = async () => {
@@ -107,6 +126,27 @@ const MealSingle = ({ meal }) => {
       }
     } catch (error) {
       console.error("Error unbookmarking meal:", error);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    const token = localStorage.getItem("token");
+    e.preventDefault();
+
+    const response = await fetch(`http://localhost:3000/comment/${meal?.id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // Replace `token` with the actual token
+      },
+      body: JSON.stringify({ comment: newComment }),
+    });
+
+    if (response.ok) {
+      setComments([...comments, newComment]);
+      setNewComment("");
+    } else {
+      console.error("Failed to post comment:", response.statusText);
     }
   };
 
@@ -248,14 +288,7 @@ const MealSingle = ({ meal }) => {
             </div>
             <br />
             <br />
-            <form
-              className="comment-form"
-              onSubmit={(e) => {
-                e.preventDefault();
-                setComments([...comments, newComment]);
-                setNewComment("");
-              }}
-            >
+            <form className="comment-form" onSubmit={handleSubmit}>
               <label className="comment-label">
                 Add comment:
                 <input
@@ -274,8 +307,16 @@ const MealSingle = ({ meal }) => {
               <h6 className="fs-16">Comments:</h6>
               <ul>
                 {comments.map((comment, idx) => (
-                  <li key={idx}>
-                    <strong>user:</strong> {comment}
+                  <li
+                    key={idx}
+                    style={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    <div>
+                      <strong>{comment.user.username}</strong> {comment.content}
+                    </div>
+                    <div>
+                      {new Date(Number(comment.timestamp)).toLocaleString()}
+                    </div>
                   </li>
                 ))}
               </ul>
