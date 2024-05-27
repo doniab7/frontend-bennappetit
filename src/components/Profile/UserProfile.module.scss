@@ -2,8 +2,8 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center; // This centers the child div
-  position: relative; // Ensures that this content is layered above the SVG
+  align-items: center;
+  position: relative;
   z-index: 100;
 
   .profile-settings-container {
@@ -22,42 +22,43 @@
   }
 
   .profile-card-container {
-    width: 100%; // Take up the full width
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: flex-start;
     padding: 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    margin-top: 300px; // To overlap the header
-    background: #fff; // Set the background to white
+    margin-top: 300px;
+    background: #fff;
     border-radius: 5px;
-    z-index: 100; // Ensure it's above the page background but below the fixed header
+    z-index: 100;
   }
+
   .back {
     position: absolute;
     top: 270px;
     right: 300px;
-    cursor: pointer; // Change cursor to pointer for better UX
+    cursor: pointer;
     text-decoration: none;
     display: flex;
     align-items: center;
-    gap: 10px; // Add a gap between the icon and the text
-    transition: transform 0.3s ease; // Smooth transition for scaling
+    gap: 10px;
+    transition: transform 0.3s ease;
 
     .back-text {
-      font-size: 2rem; // Adjust font size as needed
+      font-size: 2rem;
       color: #2b0606;
-      font-weight: bold; // Make the text bold for more appeal
-      transition: transform 0.4s ease; // Smooth transition for scaling
+      font-weight: bold;
+      transition: transform 0.4s ease;
     }
 
     &:hover {
-      transform: scale(1.05); // Scale up on hover
+      transform: scale(1.05);
     }
 
     &:hover .back-text {
-      transform: scale(1.1); // Slightly larger scale on hover for text
-      color: #ff6f61; // Change text color on hover for better effect
+      transform: scale(1.1);
+      color: #ff6f61;
     }
   }
 
@@ -108,14 +109,22 @@
       width: 100%;
       margin-top: 10px;
       display: flex;
+      justify-content: center;
+    }
 
-      input {
-        width: 100%;
-        padding: 10px;
-        margin-top: 10px;
-        border: 1px solid #ced4da;
-        border-radius: 4px;
-      }
+    input[type="file"] {
+      display: none;
+    }
+
+    .custom-file-upload {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #7b1c27;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 200px;
+      text-align: center;
     }
   }
 
