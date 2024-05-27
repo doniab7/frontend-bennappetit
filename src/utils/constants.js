@@ -1,7 +1,7 @@
 export const CATEGORIES_URL = 'category';
 export const MEAL_CATEGORIES_URL = "meal/category";
 export const MEAL_SINGLE_URL  = "meal";
-export const SEARCH_URL = "search";
+export const SEARCH_URL = "meal/search";
 export const MEALS_URL= "meal";
 export const MEALS_USER_URL= "meal/user";
 

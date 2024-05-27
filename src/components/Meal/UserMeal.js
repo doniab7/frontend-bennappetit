@@ -24,7 +24,6 @@ const UserMeal = () => {
         console.error("Error fetching meals:", error);
       }
     };
-
     fetchMeals();
   }, [authUser.id]);
 
