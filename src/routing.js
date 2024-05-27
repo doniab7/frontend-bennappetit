@@ -58,9 +58,9 @@ const Routing = () => {
       <Route
         path="/user/:id"
         element={
-          // <PrivateRoute>
+          <PrivateRoute>
             <UserProfile />
-          // </PrivateRoute>
+         </PrivateRoute>
         }
       />
 

@@ -57,14 +57,15 @@ const SettingsContainer = () => {
 };
 const ProfileCard = () => {
   const { isLoggedIn, setIsLoggedIn, authUser, setAuthUser } = useAuthContext();
+
   const ProfileImage = BASE_URL + USER_THUMBNAIL_URL + authUser?.ImageProfile;
   console.log(ProfileImage)
-
   return (
     <div className={styles["profile-card"]}>
       {console.log(authUser?.ImageProfile)}
       <img
         className={styles["profile-picture"]}
+
         src={ProfileImage}
         alt="ee"
       />
@@ -91,6 +92,7 @@ const ProfileCard = () => {
 
 const SettingsTabs = () => {
   return (
+
     <div>
       <Tabs>
         <TabList>
@@ -101,7 +103,6 @@ const SettingsTabs = () => {
           <Tab>Bookmarked Recipes</Tab>
           <Tab>Notifications</Tab>
         </TabList>
-
         <TabPanel>
           <ProfileSettings />
         </TabPanel>

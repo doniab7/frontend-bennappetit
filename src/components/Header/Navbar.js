@@ -10,7 +10,7 @@ const Navbar = () => {
   const { openSidebar } = useSidebarContext();
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
-  const { authUser, isLoggedIn } = useAuthContext();
+  const { authUser, isLoggedIn, setAuthUser, setIsLoggedIn } = useAuthContext();
   const handleScroll = () => {
     const offset = window.scrollY;
     if (offset > 60) {
@@ -50,7 +50,8 @@ const Navbar = () => {
                 <button
                   type="button"
                   className="navbar-show-btn text-white navbar-brand-text fw-5 "
-                  onClick={() => navigate(`/user/${authUser.id}`)}
+                  onClick={() => navigate(`user/${authUser.id}`)}
+
                 >
                   {authUser.username}
                 </button>
@@ -68,7 +69,11 @@ const Navbar = () => {
                 <button
                   type="button"
                   className="navbar-show-btn text-white navbar-brand-text fw-5 mx-1"
-                  onClick={() => navigate("/")}
+                  onClick={() => {
+                    localStorage.removeItem("token");
+                    setIsLoggedIn(false);
+                    setAuthUser(null);
+                  }}
                 >
                   <MdLogout size={20} className="mr-1" /> logout
                 </button>
