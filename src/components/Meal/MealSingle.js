@@ -14,6 +14,7 @@ import { BiChevronsRight } from "react-icons/bi";
 import { BASE_URL, MEAL_THUMBNAIL_URL } from "../../utils/constants";
 import { useAuthContext } from "../../context/authenticationContext";
 import "./Meal.scss";
+import axios from "axios";
 
 const MealSingle = ({ meal }) => {
   const instructions = meal?.steps?.map((step) => step.description) || [];
@@ -22,43 +23,28 @@ const MealSingle = ({ meal }) => {
   const [isFollowing, setIsFollowing] = useState(false);
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
-  const [isBookmarked, setIsBookmarked] = useState(false);
+
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
 
-  const navigate = useNavigate();
-  const { authUser, isLoggedIn } = useAuthContext();
+  const [isBookmarked, setIsBookmarked] = useState(false);
 
   useEffect(() => {
-    const fetchBookmarks = async () => {
-      const token = localStorage.getItem("token");
-
+    const checkIfBookmarked = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/bookmark`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          credentials: "include",
-        });
-
-        if (response.ok) {
-          const bookmarks = await response.json();
-          const isMealBookmarked = bookmarks.some(
-            (bookmark) => bookmark?.meal?.id === meal?.id
-          );
-          setIsBookmarked(isMealBookmarked);
-        } else {
-          console.error("Failed to fetch bookmarks:", response.statusText);
-        }
+        const response = await axios.get(`/bookmark/isbookmarked/${meal.id}`);
+        setIsBookmarked(response.data);
       } catch (error) {
-        console.error("Error fetching bookmarks:", error);
+        console.error("Failed to check if meal is bookmarked:", error);
       }
     };
 
-    fetchBookmarks();
-  }, [meal]);
+    checkIfBookmarked();
+  }, [meal.id]);
 
+
+  const navigate = useNavigate();
+  const { authUser, isLoggedIn } = useAuthContext();
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -131,14 +117,17 @@ const MealSingle = ({ meal }) => {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await fetch(`http://localhost:3000/like/${meal?.id}/like`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        credentials: "include",
-      });
+      const response = await fetch(
+        `http://localhost:3000/like/${meal?.id}/like`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          credentials: "include",
+        }
+      );
 
       if (response.ok) {
         setIsLiked(true);
@@ -154,14 +143,17 @@ const MealSingle = ({ meal }) => {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await fetch(`http://localhost:3000/like/${meal?.id}/unlike`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        credentials: "include",
-      });
+      const response = await fetch(
+        `http://localhost:3000/like/${meal?.id}/unlike`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          credentials: "include",
+        }
+      );
 
       if (response.ok) {
         setIsLiked(false);
