@@ -28,23 +28,73 @@ const MealSingle = ({ meal }) => {
   const [newComment, setNewComment] = useState("");
 
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const [isBookmarkLoading, setIsBookmarkLoading] = useState(true);
+  const [isLikeLoading, setIsLikeLoading] = useState(true);
 
   useEffect(() => {
     const checkIfBookmarked = async () => {
+      const token = localStorage.getItem("token");
       try {
-        const response = await axios.get(`/bookmark/isbookmarked/${meal.id}`);
-        setIsBookmarked(response.data);
+        const response = await fetch(
+          `http://localhost:3000/bookmark/isbookmarked/${meal.id}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            credentials: "include",
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const data = await response.json();
+        setIsBookmarked(data);
+        console.log("bookmarked:", data);
+        setIsBookmarkLoading(false);
       } catch (error) {
         console.error("Failed to check if meal is bookmarked:", error);
+        setIsBookmarkLoading(false);
       }
     };
 
     checkIfBookmarked();
   }, [meal.id]);
 
+  useEffect(() => {
+    const checkIfLiked = async () => {
+      const token = localStorage.getItem("token");
 
-  const navigate = useNavigate();
-  const { authUser, isLoggedIn } = useAuthContext();
+      try {
+        const response = await fetch(
+          `http://localhost:3000/like/isliked/${meal.id}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            credentials: "include",
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const data = await response.json();
+        setIsLiked(data);
+        console.log("liked:", data);
+      } catch (error) {
+        console.error("Failed to check if meal is liked:", error);
+      } finally {
+        setIsLikeLoading(false);
+      }
+    };
+
+    checkIfLiked();
+  }, [meal.id]);
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -166,8 +216,8 @@ const MealSingle = ({ meal }) => {
   };
 
   const handleSubmit = async (e) => {
-    const token = localStorage.getItem("token");
     e.preventDefault();
+    const token = localStorage.getItem("token");
 
     const response = await fetch(`http://localhost:3000/comment/${meal?.id}`, {
       method: "POST",
@@ -179,12 +229,18 @@ const MealSingle = ({ meal }) => {
     });
 
     if (response.ok) {
-      setComments([...comments, newComment]);
+      const data = await response.json();
+      console.log("Returned data:", data);
+      setComments([...comments, data.comment]);
       setNewComment("");
     } else {
       console.error("Failed to post comment:", response.statusText);
     }
   };
+
+  if (isBookmarkLoading || isLikeLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="section-wrapper">
@@ -272,7 +328,7 @@ const MealSingle = ({ meal }) => {
                   style={{ marginRight: "10px" }}
                   onClick={isLiked ? unlikeMeal : likeMeal}
                 >
-                  <FaHeart className="icon" /> {isLiked ? "Liked" : "Like"}
+                  <FaHeart className="icon" /> {isLiked ? meal?.numberLikes : "Like"}
                 </button>
                 <button
                   className={`btn btn-content ${
@@ -350,10 +406,11 @@ const MealSingle = ({ meal }) => {
                     style={{ display: "flex", justifyContent: "space-between" }}
                   >
                     <div>
-                      <strong>{comment.user.username}</strong> {comment.content}
+                      <strong>{comment?.user?.username}</strong>{" "}
+                      {comment?.content}
                     </div>
                     <div>
-                      {new Date(Number(comment.timestamp)).toLocaleString()}
+                      {new Date(Number(comment?.timestamp)).toLocaleString()}
                     </div>
                   </li>
                 ))}
