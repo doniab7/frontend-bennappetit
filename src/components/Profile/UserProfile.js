@@ -3,6 +3,14 @@ import styles from "./UserProfile.module.scss";
 import { useAuthContext } from "../../context/authenticationContext";
 import { Link } from "react-router-dom";
 import { MdFoodBank } from "react-icons/md";
+import { Route, Routes } from "react-router-dom";
+import UserMeal from "../Meal/UserMeal";
+import BookmarkedMeals from "../Meal/BookmarkedMeals";
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import "react-tabs/style/react-tabs.css";
+import FollowersModal from "./FollowersModal";
+import ProfileSettings from "./ProfileSettings";
+import { BASE_URL, USER_THUMBNAIL_URL } from "../../utils/constants";
 
 const UserProfile = () => {
   return (
@@ -47,19 +55,18 @@ const SettingsContainer = () => {
     </div>
   );
 };
-
 const ProfileCard = () => {
   const { isLoggedIn, setIsLoggedIn, authUser, setAuthUser } = useAuthContext();
-  if (!authUser) {
-    return <div> wait</div>;
-  }
+
+  const ProfileImage = BASE_URL + USER_THUMBNAIL_URL + authUser?.ImageProfile;
+  console.log(ProfileImage)
   return (
     <div className={styles["profile-card"]}>
+      {console.log(authUser?.ImageProfile)}
       <img
         className={styles["profile-picture"]}
-        src={authUser.ImageProfile
-          ? authUser.ImageProfile
-          : `${process.env.PUBLIC_URL}/aziz.jpg`}
+
+        src={ProfileImage}
         alt="ee"
       />
       <h1>{isLoggedIn ? authUser.username : ""}</h1>
@@ -79,28 +86,41 @@ const ProfileCard = () => {
       <div className={styles["profile-link"]}>
         <input type="text" value="https://apple.com/co" readOnly />
       </div>
-      <button className={styles["update-button"]}>Update Image</button>
     </div>
   );
 };
 
 const SettingsTabs = () => {
   return (
-    <div className={styles["settings-tabs"]}>
-      <ul className={styles.tabs}>
-        <li>Account Settings</li>
-        <li>Your Followers</li>
-        <li>Following</li>
-        <li>Your Recipes</li>
 
-        <li>Notifications</li>
-      </ul>
-      <div className={styles["tab-content"]}>
-        <label>
-          Receive notification emails
-          <input type="checkbox" />
-        </label>
-      </div>
+    <div>
+      <Tabs>
+        <TabList>
+          <Tab>Account Settings</Tab>
+          <Tab>Your Followers</Tab>
+          <Tab>Following</Tab>
+          <Tab>Your Recipes</Tab>
+          <Tab>Bookmarked Recipes</Tab>
+          <Tab>Notifications</Tab>
+        </TabList>
+        <TabPanel>
+          <ProfileSettings />
+        </TabPanel>
+        <TabPanel>
+          <FollowersModal type="followers" />
+        </TabPanel>
+        <TabPanel>
+          <FollowersModal type="following" />
+        </TabPanel>
+        <TabPanel>
+          <UserMeal />
+        </TabPanel>
+        <TabPanel>
+          <BookmarkedMeals />
+        </TabPanel>
+        <TabPanel>
+        </TabPanel>
+      </Tabs>
     </div>
   );
 };

@@ -13,10 +13,10 @@ const AddMealForm = ({ setOpenModal }) => {
   const [description, setDescription] = useState('');
   const [hours, setHours] = useState('');
   const [minutes, setMinutes] = useState('');
-
+  const [steps, setSteps] = useState([{ rank: 1, description: '' }]);
   const [newIngredient, setNewIngredient] = useState('');
   const [newGrammageValue, setNewGrammageValue] = useState('');
-  const [newGrammageUnit, setNewGrammageUnit] = useState('g'); // Unité par défaut : gramme
+  const [newGrammageUnit, setNewGrammageUnit] = useState('g');
 
   const handleFileInputChange = (e) => {
     const file = e.target.files[0];
@@ -34,28 +34,57 @@ const AddMealForm = ({ setOpenModal }) => {
     }
   };
 
+  const handleAddStep = () => {
+    setSteps([...steps, { rank: steps.length + 1, description: '' }]);
+  };
+
+  const handleRemoveStep = (index) => {
+    const newSteps = steps.filter((_, i) => i !== index);
+    setSteps(newSteps);
+  };
+
+  const handleStepChange = (index, field, value) => {
+    const newSteps = steps.map((step, i) => 
+      i === index ? { ...step, [field]: value } : step
+    );
+    setSteps(newSteps);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const totalDuration = parseInt(hours) * 60 + parseInt(minutes);
+  
+    // Préparation des données de formulaire pour l'envoi
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("region", region);
+    formData.append("description", description);
+    formData.append("duration", totalDuration);
+    formData.append("steps", JSON.stringify(steps)); 
+  
     try {
-      const response = await api.post('/meal/create', {
-        name,
-        region,
-        description,
-        duration: totalDuration, 
+      const response = await api.post('/meal', formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
+  
       if (response.status === 200) {
+        // Réinitialisation des états après une réponse réussie
         setName('');
         setRegion('');
         setDescription('');
         setHours('');
         setMinutes('');
+        setSteps([{ rank: 1, description: '' }]);
         history.push('/');
       }
     } catch (err) {
       console.log(`Error: ${err.message}`);
     }
   };
+  
 
   return (
     <div className="modalBackground">
@@ -118,13 +147,6 @@ const AddMealForm = ({ setOpenModal }) => {
             </div>
             <div style={{ marginBottom: '15px' }}>
               <label style={{ color: '#7b1c27', fontWeight: 'bold' }}>Ingredients:</label>
-              {/* <ul>
-                {recipe.ingredients.map((ingredient, index) => (
-                  <li key={index}>
-                    {ingredient.name} - {ingredient.grammage}
-                  </li>
-                ))}
-              </ul> */}
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <input
                   type="text"
@@ -184,6 +206,67 @@ const AddMealForm = ({ setOpenModal }) => {
                   Add ingredient
                 </button>
               </div>
+            </div>
+            <div style={{ marginBottom: '15px' }}>
+              <label style={{ color: '#7b1c27', fontWeight: 'bold' }}>Steps:</label>
+              {steps.map((step, index) => (
+                <div key={index} style={{ display: 'flex', marginBottom: '10px', alignItems: 'center' }}>
+                  <input
+                    type
+                    type="number"
+                    placeholder="Rank"
+                    value={step.rank}
+                    onChange={(e) => handleStepChange(index, 'rank', e.target.value)}
+                    style={{
+                      width: '10%',
+                      padding: '8px',
+                      marginRight: '10px',
+                      border: '1px solid #ccc',
+                      borderRadius: '4px',
+                    }}
+                  />
+                  <textarea
+                    placeholder="Description"
+                    value={step.description}
+                    onChange={(e) => handleStepChange(index, 'description', e.target.value)}
+                    style={{
+                      width: '80%',
+                      padding: '8px',
+                      border: '1px solid #ccc',
+                      borderRadius: '4px',
+                      marginRight: '10px',
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveStep(index)}
+                    style={{
+                      padding: '8px',
+                      backgroundColor: '#7b1c27',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faTimes} />
+                  </button>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={handleAddStep}
+                style={{
+                  padding: '8px',
+                  backgroundColor: '#7b1c27',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                }}
+              >
+                Add Step
+              </button>
             </div>
             <div style={{ marginBottom: '15px' }}>
               <label style={{ color: '#7b1c27', fontWeight: 'bold' }}>Preparation Time:</label>

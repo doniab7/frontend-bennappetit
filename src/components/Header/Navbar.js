@@ -51,6 +51,7 @@ const Navbar = () => {
                   type="button"
                   className="navbar-show-btn text-white navbar-brand-text fw-5 "
                   onClick={() => navigate(`user/${authUser.id}`)}
+
                 >
                   {authUser.username}
                 </button>

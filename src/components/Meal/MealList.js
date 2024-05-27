@@ -20,7 +20,7 @@ const MealList = ({ meals }) => {
                 <Link to = {`/meal/${id}`} className = "meal-itm align-center justify-center" key = {id}>
                   <div className='meal-itm-img'>
                     <img src = {mealThumbnail} alt = {name} />
-                    <div className='meal-itm-cat bg-orange text-orange fw-6'>{category.name}</div>
+                    <div className='meal-itm-cat bg-orange text-orange fw-6'>{category?.name}</div>
                   </div>
 
                   <div className='meal-itm-body'>
