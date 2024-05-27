@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import MealList from "./MealList";
 import AddMealForm from "./AddMealForm";
-import { useMealContext } from "../../context/mealContext";
-import { useParams } from "react-router-dom";
 import { useAuthContext } from "../../context/authenticationContext";
 
 const UserMeal = () => {
