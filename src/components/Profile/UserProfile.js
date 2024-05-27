@@ -3,11 +3,6 @@ import styles from "./UserProfile.module.scss";
 import { useAuthContext } from "../../context/authenticationContext";
 import { Link } from "react-router-dom";
 import { MdFoodBank } from "react-icons/md";
-import { Route, Routes } from "react-router-dom";
-import UserMeal from "../Meal/UserMeal";
-import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-import "react-tabs/style/react-tabs.css";
-import FollowersModal from "./FollowersModal";
 
 const UserProfile = () => {
   return (
@@ -55,12 +50,16 @@ const SettingsContainer = () => {
 
 const ProfileCard = () => {
   const { isLoggedIn, setIsLoggedIn, authUser, setAuthUser } = useAuthContext();
-
+  if (!authUser) {
+    return <div> wait</div>;
+  }
   return (
     <div className={styles["profile-card"]}>
       <img
         className={styles["profile-picture"]}
-        src={require("../../assets/images/aziz.jpg")}
+        src={authUser.ImageProfile
+          ? authUser.ImageProfile
+          : `${process.env.PUBLIC_URL}/aziz.jpg`}
         alt="ee"
       />
       <h1>{isLoggedIn ? authUser.username : ""}</h1>
@@ -87,32 +86,21 @@ const ProfileCard = () => {
 
 const SettingsTabs = () => {
   return (
-    <div>
-      <Tabs>
-        <TabList>
-          <Tab>Account Settings</Tab>
-          <Tab>Your Followers</Tab>
-          <Tab>Following</Tab>
-          <Tab>Your Recipes</Tab>
-          <Tab>Notifications</Tab>
-        </TabList>
+    <div className={styles["settings-tabs"]}>
+      <ul className={styles.tabs}>
+        <li>Account Settings</li>
+        <li>Your Followers</li>
+        <li>Following</li>
+        <li>Your Recipes</li>
 
-        <TabPanel>
-          <label>
-            Receive notification emails
-            <input type="checkbox" />
-          </label>
-        </TabPanel>
-        <TabPanel>
-          <FollowersModal type="followers" />
-        </TabPanel>
-        <TabPanel>
-          <FollowersModal type="following" />
-        </TabPanel>
-        <TabPanel>
-          <UserMeal />
-        </TabPanel>
-      </Tabs>
+        <li>Notifications</li>
+      </ul>
+      <div className={styles["tab-content"]}>
+        <label>
+          Receive notification emails
+          <input type="checkbox" />
+        </label>
+      </div>
     </div>
   );
 };
