@@ -12,7 +12,8 @@ import { Link } from "react-router-dom";
 import { BiChevronsRight } from "react-icons/bi";
 import { BASE_URL, MEAL_THUMBNAIL_URL } from "../../utils/constants";
 import { FaUserPlus, FaBell } from "react-icons/fa";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 const MealSingle = ({ meal }) => {
   const instructions = meal?.steps?.map((step) => step.description) || [];
@@ -23,6 +24,61 @@ const MealSingle = ({ meal }) => {
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
+
+  const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState("");
+
+  const bookmarkMeal = async () => {
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await fetch(
+        `http://localhost:3000/bookmark/${meal?.id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          credentials: "include",
+        }
+      );
+
+      if (response.ok) {
+        setIsBookmarked(true);
+      } else {
+        console.error("Failed to bookmark meal:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error bookmarking meal:", error);
+    }
+  };
+
+  const unbookmarkMeal = async () => {
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await fetch(
+        `http://localhost:3000/bookmark/${meal?.id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          credentials: "include",
+        }
+      );
+
+      if (response.ok) {
+        setIsBookmarked(false);
+      } else {
+        console.error("Failed to unbookmark meal:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error unbookmarking meal:", error);
+    }
+  };
 
   return (
     <div className="section-wrapper">
@@ -115,10 +171,10 @@ const MealSingle = ({ meal }) => {
                     isBookmarked ? "btn-white" : "btn-red"
                   }`}
                   style={{ marginRight: "10px" }}
-                  onClick={() => setIsBookmarked(!isBookmarked)}
+                  onClick={isBookmarked ? unbookmarkMeal : bookmarkMeal}
                 >
                   <FaBookmark className="icon" />{" "}
-                  {isBookmarked ? "Bookmarked" : "Bookmark"}
+                  {isBookmarked ? "Unbookmark" : "Bookmark"}
                 </button>
                 <button className="btn btn-red btn-content">
                   <FaShareSquare className="icon" /> Share
@@ -159,6 +215,40 @@ const MealSingle = ({ meal }) => {
                   </li>
                 ))}
               </ol>
+            </div>
+            <br />
+            <br />
+            <form
+              className="comment-form"
+              onSubmit={(e) => {
+                e.preventDefault();
+                setComments([...comments, newComment]);
+                setNewComment("");
+              }}
+            >
+              <label className="comment-label">
+                Add comment:
+                <input
+                  className="comment-input"
+                  type="text"
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                />
+              </label>
+              <input className="comment-submit" type="submit" value="Submit" />
+            </form>
+
+            <br />
+            <br />
+            <div className="comments">
+              <h6 className="fs-16">Comments:</h6>
+              <ul>
+                {comments.map((comment, idx) => (
+                  <li key={idx}>
+                    <strong>user:</strong> {comment}
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </section>
