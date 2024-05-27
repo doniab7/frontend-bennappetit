@@ -1,9 +1,7 @@
 import React from "react";
 import styles from "./UserProfile.module.scss";
 import { useAuthContext } from "../../context/authenticationContext";
-import { Link } from "react-router-dom";
-import { MdFoodBank } from "react-icons/md";
-import { Route, Routes } from "react-router-dom";
+
 import UserMeal from "../Meal/UserMeal";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
@@ -57,16 +55,12 @@ const SettingsContainer = () => {
 const ProfileCard = () => {
   const { isLoggedIn, setIsLoggedIn, authUser, setAuthUser } = useAuthContext();
   const ProfileImage = BASE_URL + USER_THUMBNAIL_URL + authUser?.ImageProfile;
-  console.log(ProfileImage)
+  console.log(ProfileImage);
 
   return (
     <div className={styles["profile-card"]}>
       {console.log(authUser.ImageProfile)}
-      <img
-        className={styles["profile-picture"]}
-        src={ProfileImage}
-        alt="ee"
-      />
+      <img className={styles["profile-picture"]} src={ProfileImage} alt="ee" />
       <h1>{isLoggedIn ? authUser.username : ""}</h1>
       <p>The Baking Boss </p>
       <ul className={styles.stats}>
