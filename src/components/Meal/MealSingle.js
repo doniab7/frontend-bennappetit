@@ -1,3 +1,4 @@
+// MealSingle.js
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -15,6 +16,7 @@ import { BASE_URL, MEAL_THUMBNAIL_URL } from "../../utils/constants";
 import { useAuthContext } from "../../context/authenticationContext";
 import "./Meal.scss";
 import axios from "axios";
+import Modal from "../Profile/Modal"; // Import the modal component
 
 const MealSingle = ({ meal }) => {
   const instructions = meal?.steps?.map((step) => step.description) || [];
@@ -31,6 +33,9 @@ const MealSingle = ({ meal }) => {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [isBookmarkLoading, setIsBookmarkLoading] = useState(true);
   const [isLikeLoading, setIsLikeLoading] = useState(true);
+
+  const [showModal, setShowModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
 
   useEffect(() => {
     if (meal) {
@@ -249,6 +254,11 @@ const MealSingle = ({ meal }) => {
     }
   };
 
+  const handleUsernameClick = (user) => {
+    setSelectedUser(user);
+    setShowModal(true);
+  };
+
   if (isBookmarkLoading || isLikeLoading) {
     return <div>Loading...</div>;
   }
@@ -294,7 +304,9 @@ const MealSingle = ({ meal }) => {
                     fontWeight: "normal",
                     marginLeft: "10px",
                     marginRight: "10px",
+                    cursor: "pointer",
                   }}
+                  onClick={() => handleUsernameClick(meal?.user)}
                 >
                   {meal?.user?.username}
                 </h4>
@@ -430,6 +442,12 @@ const MealSingle = ({ meal }) => {
           </div>
         </section>
       </div>
+
+      <Modal
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        user={selectedUser}
+      />
     </div>
   );
 };
