@@ -6,56 +6,58 @@ import { useAuthContext } from "../../context/authenticationContext";
 
 const ProfileSettings = () => {
   const navigate = useNavigate();
-  const { authUser, isLoggedIn } = useAuthContext();
+  const { authUser, isLoggedIn ,setAuthUser} = useAuthContext();
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [profileImage, setProfileImage] = useState(null);
+  const [bio, setBio] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (isLoggedIn && authUser) {
       setUsername(authUser.username);
       setEmail(authUser.email);
+      setBio(authUser.bio || "");
     }
   }, [authUser, isLoggedIn]);
 
-  const handleFileInputChange = (e) => {
-    const file = e.target.files[0];
-    setProfileImage(file);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      alert("Passwords do not match!");
+
+    if (password && password !== confirmPassword) {
+      setError("Passwords do not match!");
       return;
+    } else {
+      setError("");
     }
 
-    const formData = new FormData();
-    formData.append("username", username);
-    formData.append("email", email); 
-    formData.append("password", password);
-    if (profileImage) {
-      formData.append("profileImage", profileImage);
+    const formData = {
+      username,
+      email,
+      bio,
+    };
+    if (password) {
+      formData.password = password;
     }
 
     try {
       const response = await api.patch(`/user/${authUser.id}`, formData, {
         headers: {
-          "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
 
       if (response.status === 200) {
+        const updatedUser = { ...authUser, username, bio };
+        setAuthUser(updatedUser);
         setUsername("");
         setEmail("");
         setPassword("");
         setConfirmPassword("");
-        setProfileImage(null);
-        navigate("/profile"); // Navigate to the profile page after successful update
+        setBio("");
+        navigate("/");
       }
     } catch (err) {
       console.log(`Error: ${err.message}`);
@@ -90,7 +92,6 @@ const ProfileSettings = () => {
               name="password"
               onChange={(e) => setPassword(e.target.value)}
               value={password}
-              required
             />
           </div>
           <div className="form-group form-group-half">
@@ -100,16 +101,27 @@ const ProfileSettings = () => {
               name="confirmPassword"
               onChange={(e) => setConfirmPassword(e.target.value)}
               value={confirmPassword}
-              required
+              disabled={!password} // Disable if password is empty
             />
           </div>
         </div>
+        {error && (
+          <div className="form-row">
+            <div className="form-group">
+              <p className="error-message" style={{ color: "red" }}>
+                {error}
+              </p>
+            </div>
+          </div>
+        )}
         <div className="form-group">
-          <label>Upload Photo:</label>
+          <label>Bio:</label>
           <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileInputChange}
+            type="text"
+            name="bio"
+            onChange={(e) => setBio(e.target.value)}
+            value={bio}
+            maxLength="60"
           />
         </div>
         <button className="buttonSetting" type="submit">

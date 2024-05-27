@@ -1,9 +1,11 @@
 import React from "react";
 import styles from "./UserProfile.module.scss";
 import { useAuthContext } from "../../context/authenticationContext";
+
 import { Link, useNavigate } from "react-router-dom";
 import { MdFoodBank } from "react-icons/md";
 import { Route, Routes } from "react-router-dom";
+
 import UserMeal from "../Meal/UserMeal";
 import BookmarkedMeals from "../Meal/BookmarkedMeals";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
@@ -68,6 +70,7 @@ const SettingsContainer = () => {
 const ProfileCard = () => {
   const { isLoggedIn, setIsLoggedIn, authUser, setAuthUser } = useAuthContext();
 
+
   let ProfileImage;
 
   if (authUser?.ImageProfile) {
@@ -77,6 +80,7 @@ const ProfileCard = () => {
   }
   return (
     <div className={styles["profile-card"]}>
+
       <img className={styles["profile-picture"]} src={ProfileImage} alt="ee" />
       <h1>{isLoggedIn ? authUser.username : ""}</h1>
       <p>The Baking Boss </p>
