@@ -179,7 +179,9 @@ const MealSingle = ({ meal }) => {
             </div>
 
             <div className="details-intro">
-              <h2 className="text-orange">{meal?.name}</h2>
+              <h2 className="text-orange" style={{ textAlign: "left" }}>
+                {meal?.name}
+              </h2>
               <div style={{ display: "flex", alignItems: "center" }}>
                 <FaUserTie className="text-orange" />
                 <h4

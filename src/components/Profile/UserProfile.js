@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { MdFoodBank } from "react-icons/md";
 import { Route, Routes } from "react-router-dom";
 import UserMeal from "../Meal/UserMeal";
+import BookmarkedMeals from "../Meal/BookmarkedMeals";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import FollowersModal from "./FollowersModal";
@@ -61,7 +62,7 @@ const ProfileCard = () => {
 
   return (
     <div className={styles["profile-card"]}>
-      {console.log(authUser.ImageProfile)}
+      {console.log(authUser?.ImageProfile)}
       <img
         className={styles["profile-picture"]}
         src={ProfileImage}
@@ -97,6 +98,7 @@ const SettingsTabs = () => {
           <Tab>Your Followers</Tab>
           <Tab>Following</Tab>
           <Tab>Your Recipes</Tab>
+          <Tab>Bookmarked Recipes</Tab>
           <Tab>Notifications</Tab>
         </TabList>
 
@@ -113,7 +115,9 @@ const SettingsTabs = () => {
           <UserMeal />
         </TabPanel>
         <TabPanel>
-          <UserMeal />
+          <BookmarkedMeals />
+        </TabPanel>
+        <TabPanel>
         </TabPanel>
       </Tabs>
     </div>
