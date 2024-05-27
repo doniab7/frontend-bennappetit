@@ -59,35 +59,6 @@ const MealSingle = ({ meal }) => {
     fetchBookmarks();
   }, [meal]);
 
-  useEffect(() => {
-    const fetchLikes = async () => {
-      const token = localStorage.getItem("token");
-
-      try {
-        const response = await fetch(`http://localhost:3000/like`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          credentials: "include",
-        });
-
-        if (response.ok) {
-          const likes = await response.json();
-          const isMealLiked = likes.some(
-            (like) => like?.meal?.id === meal?.id
-          );
-          setIsLiked(isMealLiked);
-        } else {
-          console.error("Failed to fetch likes:", response.statusText);
-        }
-      } catch (error) {
-        console.error("Error fetching likes:", error);
-      }
-    };
-
-    fetchLikes();
-  }, [meal]);
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -160,7 +131,7 @@ const MealSingle = ({ meal }) => {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await fetch(`http://localhost:3000/like/${meal?.id}`, {
+      const response = await fetch(`http://localhost:3000/like/${meal?.id}/like`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -183,7 +154,7 @@ const MealSingle = ({ meal }) => {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await fetch(`http://localhost:3000/like/${meal?.id}`, {
+      const response = await fetch(`http://localhost:3000/like/${meal?.id}/unlike`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
