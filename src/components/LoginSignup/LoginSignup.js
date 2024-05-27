@@ -51,8 +51,7 @@ const LoginSignUp = () => {
         });
         const user = await content.json();
         setAuthUser(user);
-        localStorage.setItem("user", user);
-
+        localStorage.setItem("user", JSON.stringify(user));
         setIsLoggedIn(true);
       } else {
         console.error("Failed to fetch user:", response.statusText);

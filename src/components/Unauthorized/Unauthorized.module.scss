@@ -1,0 +1,72 @@
+/* UnauthorizedPage.module.scss */
+
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif; /* Use a modern font */
+  background-color: #f9f9f9;
+}
+
+.unauthorizedContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(to bottom right, #ff6f61, #ffa69e);
+  text-align: center;
+  color: white;
+  padding: 20px;
+}
+
+.unauthorizedContent {
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 10px;
+  padding: 40px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  width: 100%;
+}
+
+.unauthorizedIcon {
+  font-size: 50px;
+  color: #ff6f61;
+  margin-bottom: 20px;
+}
+
+.heading {
+  font-size: 72px;
+  margin: 10px 0;
+  color: #333;
+}
+
+.subheading {
+  font-size: 36px;
+  margin: 10px 0;
+  color: #555;
+}
+
+.message {
+  font-size: 18px;
+  margin: 20px 0;
+  color: #666;
+}
+
+.unauthorizedButtons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.button {
+  background-color: #ff6f61;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+
+  &:hover {
+    background-color: #ff3f31;
+    transform: scale(1.05);
+  }
+}

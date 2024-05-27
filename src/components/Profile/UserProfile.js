@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./UserProfile.module.scss";
 import { useAuthContext } from "../../context/authenticationContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { MdFoodBank } from "react-icons/md";
 import { Route, Routes } from "react-router-dom";
 import UserMeal from "../Meal/UserMeal";
@@ -11,8 +11,14 @@ import "react-tabs/style/react-tabs.css";
 import FollowersModal from "./FollowersModal";
 import ProfileSettings from "./ProfileSettings";
 import { BASE_URL, USER_THUMBNAIL_URL } from "../../utils/constants";
+import { IoIosReturnRight } from "react-icons/io";
 
 const UserProfile = () => {
+     const navigate = useNavigate();
+
+     const handleClick = () => {
+       navigate("/"); // Replace with your desired path
+     };
   return (
     <>
       <div className={styles["custom-shape-divider-top-1714330091"]}>
@@ -44,6 +50,10 @@ const UserProfile = () => {
           <ProfileCard />
           <SettingsContainer />
         </div>
+        <div className={styles["back"]} onClick={handleClick}>
+          <IoIosReturnRight size={25} />
+          <span className={styles["back-text"]}>Go back</span>
+        </div>
       </div>
     </>
   );
@@ -58,17 +68,16 @@ const SettingsContainer = () => {
 const ProfileCard = () => {
   const { isLoggedIn, setIsLoggedIn, authUser, setAuthUser } = useAuthContext();
 
-  const ProfileImage = BASE_URL + USER_THUMBNAIL_URL + authUser?.ImageProfile;
-  console.log(ProfileImage)
+  let ProfileImage;
+
+  if (authUser?.ImageProfile) {
+    ProfileImage = BASE_URL + USER_THUMBNAIL_URL + authUser.ImageProfile;
+  } else {
+    ProfileImage = process.env.PUBLIC_URL + "/default_profile_pic.jpg";
+  }
   return (
     <div className={styles["profile-card"]}>
-      {console.log(authUser?.ImageProfile)}
-      <img
-        className={styles["profile-picture"]}
-
-        src={ProfileImage}
-        alt="ee"
-      />
+      <img className={styles["profile-picture"]} src={ProfileImage} alt="ee" />
       <h1>{isLoggedIn ? authUser.username : ""}</h1>
       <p>The Baking Boss </p>
       <ul className={styles.stats}>
@@ -92,7 +101,6 @@ const ProfileCard = () => {
 
 const SettingsTabs = () => {
   return (
-
     <div>
       <Tabs>
         <TabList>
@@ -118,8 +126,7 @@ const SettingsTabs = () => {
         <TabPanel>
           <BookmarkedMeals />
         </TabPanel>
-        <TabPanel>
-        </TabPanel>
+        <TabPanel></TabPanel>
       </Tabs>
     </div>
   );

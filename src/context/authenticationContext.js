@@ -23,6 +23,8 @@ export function AuthProvider({ children }) {
         if (content.ok) {
           const userData = await content.json();
           setAuthUser(userData);
+          localStorage.setItem("user", JSON.stringify(userData));
+
           setIsLoggedIn(true);
         } else {
           console.error("Failed to fetch user:", content.statusText);
