@@ -39,7 +39,7 @@ const FollowersModal = ({ type }) => {
               <div className={styles["card"]}>
                 <img
                   className={styles["card_load"]}
-                  src={require("../../assets/images/aziz.jpg")}
+                  src={process.env.PUBLIC_URL + "/aziz.jpg"}
                   alt="ee"
                 />
                 <div className={styles["card_load_extreme_title"]}>
