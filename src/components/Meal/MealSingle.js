@@ -13,7 +13,6 @@ import { BiChevronsRight } from "react-icons/bi";
 import { BASE_URL, MEAL_THUMBNAIL_URL } from "../../utils/constants";
 import { FaUserPlus, FaBell } from "react-icons/fa";
 import { useState, useEffect } from "react";
-import axios from "axios";
 
 const MealSingle = ({ meal }) => {
   const instructions = meal?.steps?.map((step) => step.description) || [];
@@ -23,10 +22,41 @@ const MealSingle = ({ meal }) => {
   const [isFollowing, setIsFollowing] = useState(false);
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
+
   const [isBookmarked, setIsBookmarked] = useState(false);
 
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
+
+  useEffect(() => {
+    const fetchBookmarks = async () => {
+      const token = localStorage.getItem("token");
+
+      try {
+        const response = await fetch(`http://localhost:3000/bookmark`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          credentials: "include",
+        });
+
+        if (response.ok) {
+          const bookmarks = await response.json();
+          const isMealBookmarked = bookmarks.some(
+            (bookmark) => bookmark?.meal?.id === meal?.id
+          );
+          setIsBookmarked(isMealBookmarked);
+        } else {
+          console.error("Failed to fetch bookmarks:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error fetching bookmarks:", error);
+      }
+    };
+
+    fetchBookmarks();
+  }, [meal]);
 
   const bookmarkMeal = async () => {
     const token = localStorage.getItem("token");
