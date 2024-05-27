@@ -1,31 +1,28 @@
-import React from "react";
-import "./Meal.scss";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import {
   FaUtensilSpoon,
   FaUserTie,
   FaHeart,
   FaBookmark,
   FaShareSquare,
+  FaUserPlus,
+  FaBell,
 } from "react-icons/fa";
 import { AiFillHome } from "react-icons/ai";
-import { Link, useNavigate } from "react-router-dom";
 import { BiChevronsRight } from "react-icons/bi";
 import { BASE_URL, MEAL_THUMBNAIL_URL } from "../../utils/constants";
-import { FaUserPlus, FaBell } from "react-icons/fa";
-import { useState, useEffect } from "react";
 import { useAuthContext } from "../../context/authenticationContext";
+import "./Meal.scss";
 
 const MealSingle = ({ meal }) => {
   const instructions = meal?.steps?.map((step) => step.description) || [];
-
   const mealThumbnail = BASE_URL + MEAL_THUMBNAIL_URL + meal?.thumbnail;
 
   const [isFollowing, setIsFollowing] = useState(false);
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
-
   const [isBookmarked, setIsBookmarked] = useState(false);
-
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
 
@@ -60,6 +57,36 @@ const MealSingle = ({ meal }) => {
     };
 
     fetchBookmarks();
+  }, [meal]);
+
+  useEffect(() => {
+    const fetchLikes = async () => {
+      const token = localStorage.getItem("token");
+
+      try {
+        const response = await fetch(`http://localhost:3000/like`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          credentials: "include",
+        });
+
+        if (response.ok) {
+          const likes = await response.json();
+          const isMealLiked = likes.some(
+            (like) => like?.meal?.id === meal?.id
+          );
+          setIsLiked(isMealLiked);
+        } else {
+          console.error("Failed to fetch likes:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error fetching likes:", error);
+      }
+    };
+
+    fetchLikes();
   }, [meal]);
 
   useEffect(() => {
@@ -129,6 +156,52 @@ const MealSingle = ({ meal }) => {
     }
   };
 
+  const likeMeal = async () => {
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await fetch(`http://localhost:3000/like/${meal?.id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        setIsLiked(true);
+      } else {
+        console.error("Failed to like meal:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error liking meal:", error);
+    }
+  };
+
+  const unlikeMeal = async () => {
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await fetch(`http://localhost:3000/like/${meal?.id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        setIsLiked(false);
+      } else {
+        console.error("Failed to unlike meal:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error unliking meal:", error);
+    }
+  };
+
   const handleSubmit = async (e) => {
     const token = localStorage.getItem("token");
     e.preventDefault();
@@ -137,7 +210,7 @@ const MealSingle = ({ meal }) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, // Replace `token` with the actual token
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ comment: newComment }),
     });
@@ -232,7 +305,7 @@ const MealSingle = ({ meal }) => {
                     isLiked ? "btn-white" : "btn-red"
                   }`}
                   style={{ marginRight: "10px" }}
-                  onClick={() => setIsLiked(!isLiked)}
+                  onClick={isLiked ? unlikeMeal : likeMeal}
                 >
                   <FaHeart className="icon" /> {isLiked ? "Liked" : "Like"}
                 </button>

@@ -63,7 +63,7 @@ const AddMealForm = ({ setOpenModal }) => {
     formData.append("steps", JSON.stringify(steps)); 
   
     try {
-      const response = await api.post('/meal/create', formData, {
+      const response = await api.post('/meal', formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
