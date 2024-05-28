@@ -33,6 +33,7 @@ const MealSingle = ({ meal }) => {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [isBookmarkLoading, setIsBookmarkLoading] = useState(true);
   const [isLikeLoading, setIsLikeLoading] = useState(true);
+  const [isFollowingLoading, setIsFollowingLoading] = useState(true);
 
   const [showModal, setShowModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -107,6 +108,41 @@ const MealSingle = ({ meal }) => {
 
     checkIfLiked();
   }, [meal.id]);
+
+  useEffect(() => {
+    const checkIfFollowing = async () => {
+      const token = localStorage.getItem("token");
+
+      try {
+        const response = await fetch(`http://localhost:3000/user/followings`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          credentials: "include",
+        });
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const data = await response.json();
+
+        // Check if the current user's ID is in the list of followers
+        if (data.some((user) => user.id === meal.user.id)) {
+          setIsFollowing(true);
+        }
+
+        console.log("follow:", data);
+      } catch (error) {
+        console.error("Failed to check if person is following:", error);
+      } finally {
+        setIsFollowingLoading(false);
+      }
+    };
+
+    checkIfFollowing();
+  }, [meal]);
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -259,7 +295,31 @@ const MealSingle = ({ meal }) => {
     setShowModal(true);
   };
 
-  if (isBookmarkLoading || isLikeLoading) {
+  const handleFollowing = async () => {
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await fetch(`http://localhost:3000/user/follow`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ idWanted: meal.user.id }),
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        setIsFollowing(true);
+      } else {
+        console.error("Failed to follow user:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error following user:", error);
+    }
+  };
+
+  if (isBookmarkLoading || isLikeLoading || isFollowingLoading) {
     return <div>Loading...</div>;
   }
 
@@ -315,7 +375,7 @@ const MealSingle = ({ meal }) => {
                     isFollowing ? "btn-white" : "btn-red"
                   }`}
                   style={{ marginRight: "10px" }}
-                  onClick={() => setIsFollowing(!isFollowing)}
+                  onClick={handleFollowing}
                 >
                   <FaUserPlus className="icon" />{" "}
                   {isFollowing ? "Following" : "Follow"}
