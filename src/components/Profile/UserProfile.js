@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./UserProfile.module.scss";
 import { useAuthContext } from "../../context/authenticationContext";
+import api from "../../api/axios";
 
 import { Link, useNavigate } from "react-router-dom";
-import { MdFoodBank } from "react-icons/md";
-import { Route, Routes } from "react-router-dom";
+import { BASE_URL, USER_THUMBNAIL_URL } from "../../utils/constants";
 
 import UserMeal from "../Meal/UserMeal";
 import BookmarkedMeals from "../Meal/BookmarkedMeals";
@@ -12,16 +12,15 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import FollowersModal from "./FollowersModal";
 import ProfileSettings from "./ProfileSettings";
-import { BASE_URL, USER_THUMBNAIL_URL } from "../../utils/constants";
 import { IoIosReturnRight } from "react-icons/io";
 import FollowingsModal from "./FollowingsModal";
 
 const UserProfile = () => {
-     const navigate = useNavigate();
+  const navigate = useNavigate();
 
-     const handleClick = () => {
-       navigate("/"); // Replace with your desired path
-     };
+  const handleClick = () => {
+    navigate("/"); // Replace with your desired path
+  };
   return (
     <>
       <div className={styles["custom-shape-divider-top-1714330091"]}>
@@ -61,6 +60,7 @@ const UserProfile = () => {
     </>
   );
 };
+
 const SettingsContainer = () => {
   return (
     <div className={styles["settings-container"]}>
@@ -68,21 +68,58 @@ const SettingsContainer = () => {
     </div>
   );
 };
+
 const ProfileCard = () => {
-  const { isLoggedIn, setIsLoggedIn, authUser, setAuthUser } = useAuthContext();
+  const { isLoggedIn, authUser, setAuthUser } = useAuthContext();
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [preview, setPreview] = useState("");
 
+  useEffect(() => {
+    if (authUser?.ImageProfile) {
+      setPreview(BASE_URL + USER_THUMBNAIL_URL + authUser.ImageProfile);
+    } else {
+      setPreview(process.env.PUBLIC_URL + "/default_profile_pic.jpg");
+    }
+  }, [authUser]);
 
-  let ProfileImage;
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    setSelectedFile(file);
+    setPreview(URL.createObjectURL(file));
+  };
 
-  if (authUser?.ImageProfile) {
-    ProfileImage = BASE_URL + USER_THUMBNAIL_URL + authUser.ImageProfile;
-  } else {
-    ProfileImage = process.env.PUBLIC_URL + "/default_profile_pic.jpg";
-  }
+  const handleUpload = async () => {
+    if (!selectedFile) return;
+
+    const formData = new FormData();
+    formData.append("photo", selectedFile);
+
+    try {
+      const response = await api.post(
+        "/user/profile/photo",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log(response);
+      const fileName = response.data.fileName;
+      setAuthUser((prevUser) => ({
+        ...prevUser,
+        ImageProfile: fileName,
+      }));
+      setPreview(BASE_URL + USER_THUMBNAIL_URL + fileName);
+    } catch (error) {
+      console.error("Error uploading profile photo:", error);
+    }
+  };
+
   return (
     <div className={styles["profile-card"]}>
-
-      <img className={styles["profile-picture"]} src={ProfileImage} alt="ee" />
+      <img className={styles["profile-picture"]} src={preview} alt="Profile" />
       <h1>{isLoggedIn ? authUser.username : ""}</h1>
       <p>The Baking Boss </p>
       <ul className={styles.stats}>
@@ -96,9 +133,14 @@ const ProfileCard = () => {
           Current opportunities <span>6</span>
         </li>
       </ul>
-      <button className={styles["view-profile-button"]}>Update Image </button>
+      <button onClick={handleUpload} className={styles["view-profile-button"]}>
+        Upload Image
+      </button>
       <div className={styles["profile-link"]}>
-        <input type="text" value="https://apple.com/co" readOnly />
+        <label htmlFor="file-upload" className={styles["custom-file-upload"]}>
+          Choose File
+        </label>
+        <input id="file-upload" type="file" onChange={handleFileChange} />
       </div>
     </div>
   );
