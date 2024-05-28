@@ -54,7 +54,7 @@ const FollowingsModal = ({ type }) => {
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
-        <div className="sc-title"> {type}</div>
+        <div className="sc-title"> Following</div>
         <ul className={styles.followerList}>
           {followers.map((follower) => (
             <li key={follower.id}>
