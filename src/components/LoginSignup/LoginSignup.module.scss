@@ -45,7 +45,8 @@
   .underline {
     width: 250px;
     height: 3px;
-    background: #7b1c27;
+    background:    #ff6f61;
+    ;
     border-radius: 3px;
     margin-bottom: 10px;
   }
@@ -101,14 +102,14 @@
       }
 
       a {
-        color: #7b1c27;
+        color: #ff6f61;
         text-decoration: none;
         &:hover {
           text-decoration: underline;
         }
       }
       .forgotPasswordLink {
-        color: #7b1c27;
+        color: rgb(159, 68, 79);
         text-decoration: none;
         &:hover {
           text-decoration: underline;
@@ -121,7 +122,7 @@
       width: 100%;
       padding: 15px;
       border: none;
-      background-color: #7b1c27;
+      background-color: #ff6f61;
       color: white;
       border-radius: 5px;
       margin-bottom: 20px;
@@ -133,7 +134,7 @@
       width: 100%;
       padding: 15px;
       border: none;
-      background-color: #431201;
+      background-color: #982218;
       color: white;
       border-radius: 5px;
       cursor: pointer;
@@ -145,7 +146,7 @@
     margin-top: 20px;
 
     a {
-      color: #7b1c27;
+      color: #ff6f61;
       text-decoration: none;
       &:hover {
         text-decoration: underline;
