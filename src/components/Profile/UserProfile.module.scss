@@ -243,3 +243,18 @@
   justify-content: center;
   max-width: 300px;
 }
+
+
+/* UserProfile.module.scss */
+
+.settings-container {
+  /* Autres styles */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.tab-content {
+  height: 400px; /* Définissez la hauteur souhaitée */
+  overflow-y: auto; /* Ajoutez un défilement vertical */
+}
