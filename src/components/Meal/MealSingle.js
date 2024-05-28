@@ -319,6 +319,30 @@ const MealSingle = ({ meal }) => {
     }
   };
 
+  const handleUnfollowing = async () => {
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await fetch(`http://localhost:3000/user/unfollow`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ idWanted: meal.user.id }),
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        setIsFollowing(false);
+      } else {
+        console.error("Failed to follow user:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error following user:", error);
+    }
+  };
+
   if (isBookmarkLoading || isLikeLoading || isFollowingLoading) {
     return <div>Loading...</div>;
   }
@@ -375,7 +399,7 @@ const MealSingle = ({ meal }) => {
                     isFollowing ? "btn-white" : "btn-red"
                   }`}
                   style={{ marginRight: "10px" }}
-                  onClick={handleFollowing}
+                  onClick={isFollowing ? handleUnfollowing : handleFollowing}
                 >
                   <FaUserPlus className="icon" />{" "}
                   {isFollowing ? "Following" : "Follow"}
