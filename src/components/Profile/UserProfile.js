@@ -14,6 +14,7 @@ import FollowersModal from "./FollowersModal";
 import ProfileSettings from "./ProfileSettings";
 import { BASE_URL, USER_THUMBNAIL_URL } from "../../utils/constants";
 import { IoIosReturnRight } from "react-icons/io";
+import FollowingsModal from "./FollowingsModal";
 
 const UserProfile = () => {
      const navigate = useNavigate();
@@ -119,10 +120,10 @@ const SettingsTabs = () => {
           <ProfileSettings />
         </TabPanel>
         <TabPanel>
-          <FollowersModal type="followers" />
+          <FollowersModal  />
         </TabPanel>
         <TabPanel>
-          <FollowersModal type="following" />
+          <FollowingsModal />
         </TabPanel>
         <TabPanel>
           <UserMeal />

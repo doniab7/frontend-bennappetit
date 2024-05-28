@@ -3,14 +3,14 @@ import styles from "./UserProfile.module.scss";
 import { BASE_URL, USER_THUMBNAIL_URL } from "../../utils/constants";
 import { useAuthContext } from "../../context/authenticationContext";
 
-const FollowersModal = ({ type }) => {
+const FollowingsModal = ({ type }) => {
   const [followers, setFollowers] = useState([]);
-  const {authUser} =useAuthContext();
+  const {authUser}=useAuthContext();
 
   useEffect(() => {
     const fetchFollowers = async () => {
       try {
-        const response = await fetch("http://localhost:3000/user/followers", {
+        const response = await fetch("http://localhost:3000/user/followings", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -31,13 +31,12 @@ const FollowersModal = ({ type }) => {
 
     fetchFollowers();
     const eventSource = new EventSource(
-      `http://localhost:3000/notifications/follow/${authUser.id}`
+     ` http://localhost:3000/notifications/follow/${authUser.id}`
     );
 
     eventSource.onmessage = function (event) {
-      console.log('im here')
+      console.log("im here");
       const data = JSON.parse(event.data);
-     
       if (data.eventType === "new-follower") {
         fetchFollowers();
       }
@@ -80,4 +79,4 @@ const FollowersModal = ({ type }) => {
   );
 };
 
-export default FollowersModal;
+export default FollowingsModal;
