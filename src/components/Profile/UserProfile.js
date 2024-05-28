@@ -95,16 +95,12 @@ const ProfileCard = () => {
     formData.append("photo", selectedFile);
 
     try {
-      const response = await api.post(
-        "/user/profile/photo",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await api.post("/user/profile/photo", formData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
       console.log(response);
       const fileName = response.data.fileName;
       setAuthUser((prevUser) => ({
@@ -162,16 +158,20 @@ const SettingsTabs = () => {
           <ProfileSettings />
         </TabPanel>
         <TabPanel>
-          <FollowersModal  />
+          <FollowersModal />
         </TabPanel>
         <TabPanel>
           <FollowingsModal />
         </TabPanel>
         <TabPanel>
-          <UserMeal />
+          <div className={styles["tab-content"]}>
+            <UserMeal />
+          </div>{" "}
         </TabPanel>
         <TabPanel>
-          <BookmarkedMeals />
+          <div className={styles["tab-content"]}>
+            <BookmarkedMeals />
+          </div>{" "}
         </TabPanel>
         <TabPanel></TabPanel>
       </Tabs>
